@@ -1,1 +1,2 @@
-10
+
+        competitor[i]->print_all_data();
