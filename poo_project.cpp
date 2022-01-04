@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
-#include <random>
+#include <iomanip> // std::setw
 
 // template function for generating random numbers between 2 values
 template <class T>
@@ -36,11 +36,11 @@ public:
 
     virtual void print_all_data() = 0; // pure virtual function
 
-    void setFirstName(std::string);
-    void setLastName(std::string);
-    void setCity(std::string);
-    void setDebt(int);
-    void setWeight(int);
+    void getFirstName();
+    void getLastName();
+    void getCity();
+    void getDebt();
+    void getWeight();
 };
 
 class Competitors : public Players
@@ -48,7 +48,7 @@ class Competitors : public Players
 public:                                     // private
     int index = 0;                          // index of competitor
     static int number_of_competitors_alive; // static variable that stores the number of competitors(number of objects created)
-    std::string supervisor;                 // stores the supervisor allocated for current
+    std::string isSupervisedBy;             // stores the supervisor allocated for current
 
     // public:
     Competitors(std::string first_name, std::string last_name, std::string city, int debt, int weight) : Players(first_name, last_name, city, debt, weight) //
@@ -70,6 +70,7 @@ public:                                     // private
     static int getNumber_of_competitors_alive(); // getter that returns the number of competitor left alive
     void print_all_data();                       // overriding
     void setSupervisor(std::string);             // setter
+    void print_competitor_data_if_alive();
 };
 
 int Competitors::number_of_competitors_alive = 0;
@@ -93,7 +94,7 @@ void Competitors::operator--() // overloading -- operator;eliminate current comp
 
 void Competitors::setSupervisor(std::string mask_type)
 {
-    this->supervisor = mask_type;
+    this->isSupervisedBy = mask_type;
 }
 
 int Competitors::getIndex_of_competitor()
@@ -108,9 +109,16 @@ int Competitors::getNumber_of_competitors_alive()
 
 void Competitors::print_all_data()
 {
-    std::cout << this->is_alive << " " << this->first_name << " " << this->last_name << " " << this->index << " " << this->city << " " << this->debt << " " << this->weight << std::endl;
+    std::cout << this->first_name << std::setw(15) << this->last_name << std::setw(15) << this->index << std::setw(15) << this->city << std::setw(15) << this->debt << std::setw(15) << this->weight << std::endl;
 }
 
+void Competitors::print_competitor_data_if_alive()
+{
+    if (this->is_alive == true)
+    {
+        std::cout << this->first_name << std::setw(15) << this->last_name << std::setw(15) << this->city << std::setw(15) << this->debt << std::setw(15) << this->weight << std::endl;
+    }
+}
 class Supervisors : public Players
 {
 public: // private
@@ -119,7 +127,7 @@ public: // private
     static int num_of_supervisors_with_circle_mask;    // max3
     static int num_of_supervisors_with_triangle_mask;  // max3
     static int num_of_supervisors_with_rectangle_mask; // max3
-    int competitors[11];                               // every supervisor has 11 competitors
+    int isSupervising[11];                             // every supervisor has 11 competitors
     int num = 0;                                       // index for competitor vector
 public:
     Supervisors(std::string first_name, std::string last_name, std::string city, int debt, int weight, std::string mask_shape) : Players(first_name, last_name, city, debt, weight)
@@ -199,7 +207,7 @@ int Supervisors::get_num_of_supervisors_with_rectangle_mask()
 
 void Supervisors::print_all_data()
 {
-    std::cout << this->first_name << " " << this->last_name << " " << this->mask_shape << " " << this->city << " " << this->debt << " " << this->weight << std::endl;
+    std::cout << this->first_name << std::setw(15) << this->last_name << std::setw(15) << this->mask_shape << std::setw(15) << this->city << std::setw(15) << this->debt << std::setw(15) << this->weight << std::endl;
 }
 
 // main function
@@ -218,8 +226,8 @@ int main()
     for (int i = 0; i < 108; i++) // dynamically allocating memory for every player;
     {
         // if the number between 0-25 generated random is divided by 5 =>that player is a supervisor,else it is a competitor
-        // repeat the proces for every player until all slots are taken
-        // if one class of supervisors is full, then just search for another free slot
+        // repeat the process for every player until all slots are taken
+        // if one class of supervisors is full, then just search for another free slot in
         // if no slot is avaible, then that player is a competitor
 
         // genearte random number;
@@ -312,23 +320,22 @@ int main()
     int count = 0;
     for (int i = 0; i < 9; i++) // 9 supervisors
     {
-        for (int j = 0; j < 11; j++) // each supervisor has 11 competitors to watch
+        for (int j = 0; j < 11; j++) // each supervisor has 11 competitors to supervise
         {
-            supervisor[i]->competitors[supervisor[i]->num++] = count++;
+            supervisor[i]->isSupervising[supervisor[i]->num++] = count++;
         }
     }
 
     for (int i = 0; i < 9; i++)
     {
-        std::cout << "Supervisor with " << supervisor[i]->getMask_shape() << " mask:\t";
+        std::cout << "Supervisor " << i + 1 << " with " << supervisor[i]->getMask_shape() << " mask is supervising competitor no.:" << std::setw(10);
         for (int j = 0; j < 11; j++)
         {
-            std::cout << supervisor[i]->competitors[j] << " ";
+            std::cout << supervisor[i]->isSupervising[j] << " ";
         }
         std::cout << std::endl;
     }
 
-    // getIndex_of_competitor returns the number of competitor + 1;
     int i = 0;
     int breakk = 0;
     while (i < 99) // 99 competitors
@@ -338,11 +345,11 @@ int main()
         {
             for (int k = 0; k < 11 && breakk == 0; k++)
             {
-                if (supervisor[j]->competitors[k] == competitor[i]->getIndex_of_competitor() - 1)
+                if (supervisor[j]->isSupervising[k] == competitor[i]->getIndex_of_competitor() - 1) // getIndex_of_competitor returns the number of competitor + 1;
                 {
                     competitor[i]->setSupervisor(supervisor[j]->getMask_shape());
                     i++;
-                    breakk == 1;
+                    breakk = 1;
                 }
             }
         }
@@ -350,7 +357,7 @@ int main()
 
     for (int i = 0; i < 99; i++)
     {
-        std::cout << i << " " << competitor[i]->supervisor << std::endl;
+        std::cout << "Competitor no. " << i << " is supervised by a supervisor with " << competitor[i]->isSupervisedBy << " mask" << std::endl;
     }
 
     // free memory
@@ -364,21 +371,5 @@ int main()
         }
     }
 
-    std::cout << R"(
-  _______ _    _  _____    ____  ______  __          __     _____  
- |__   __| |  | |/ ____|  / __ \|  ____| \ \        / /\   |  __ \ 
-    | |  | |  | | |  __  | |  | | |__     \ \  /\  / /  \  | |__) |
-    | |  | |  | | | |_ | | |  | |  __|     \ \/  \/ / /\ \ |  _  / 
-    | |  | |__| | |__| | | |__| | |         \  /\  / ____ \| | \ \ 
-    |_|   \____/ \_____|  \____/|_|          \/  \/_/    \_\_|  \_\
-                                                                   )";
-
-    std::cout << R"(
-████████╗██╗░░░██╗░██████╗░  ░█████╗░███████╗  ░██╗░░░░░░░██╗░█████╗░██████╗░
-╚══██╔══╝██║░░░██║██╔════╝░  ██╔══██╗██╔════╝  ░██║░░██╗░░██║██╔══██╗██╔══██╗
-░░░██║░░░██║░░░██║██║░░██╗░  ██║░░██║█████╗░░  ░╚██╗████╗██╔╝███████║██████╔╝
-░░░██║░░░██║░░░██║██║░░╚██╗  ██║░░██║██╔══╝░░  ░░████╔═████║░██╔══██║██╔══██╗
-░░░██║░░░╚██████╔╝╚██████╔╝  ╚█████╔╝██║░░░░░  ░░╚██╔╝░╚██╔╝░██║░░██║██║░░██║
-░░░╚═╝░░░░╚═════╝░░╚═════╝░  ░╚════╝░╚═╝░░░░░  ░░░╚═╝░░░╚═╝░░╚═╝░░╚═╝╚═╝░░╚═╝)";
     return 1;
 }
