@@ -46,5 +46,11 @@
         "ctime": "cpp",
         "ratio": "cpp",
         "iomanip": "cpp"
-    }
+    },
+    "cSpell.ignoreWords": [
+        "breakk",
+        "familie",
+        "nume",
+        "prenume"
+    ]
 }

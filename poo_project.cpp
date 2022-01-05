@@ -3,7 +3,7 @@
 #include <time.h>
 #include <math.h>
 #include <iomanip> // std::setw
-
+#include <random>
 // template function for generating random numbers between 2 values
 template <class T>
 T generate_random(int min, int max)
@@ -71,9 +71,22 @@ public:                                     // private
     void print_all_data();                       // overriding
     void setSupervisor(std::string);             // setter
     void print_competitor_data_if_alive();
+    bool get_alive();
 };
 
 int Competitors::number_of_competitors_alive = 0;
+
+bool Competitors::get_alive()
+{
+    if (this->is_alive == true)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
 
 void Competitors::operator--() // overloading -- operator;eliminate current competitor
 {
@@ -116,7 +129,7 @@ void Competitors::print_competitor_data_if_alive()
 {
     if (this->is_alive == true)
     {
-        std::cout << this->first_name << std::setw(15) << this->last_name << std::setw(15) << this->city << std::setw(15) << this->debt << std::setw(15) << this->weight << std::endl;
+        std::cout << this->first_name << std::setw(15) << this->last_name << std::setw(15) << this->index << std::setw(15) << this->city << std::setw(15) << this->debt << std::setw(15) << this->weight << std::endl;
     }
 }
 class Supervisors : public Players
@@ -210,6 +223,14 @@ void Supervisors::print_all_data()
     std::cout << this->first_name << std::setw(15) << this->last_name << std::setw(15) << this->mask_shape << std::setw(15) << this->city << std::setw(15) << this->debt << std::setw(15) << this->weight << std::endl;
 }
 
+void RED_LIGHT_GREEN_LIGHT(Competitors *competitors[])
+{
+    for (int i = 1; i < 99; i += 2)
+    {
+        --(*competitors[i]); // eliminate the competitor
+    }
+}
+
 // main function
 int main()
 {
@@ -228,14 +249,14 @@ int main()
         // if the number between 0-25 generated random is divided by 5 =>that player is a supervisor,else it is a competitor
         // repeat the process for every player until all slots are taken
         // if one class of supervisors is full, then just search for another free slot in
-        // if no slot is avaible, then that player is a competitor
+        // if no slot is available, then that player is a competitor
 
-        // genearte random number;
+        // generate random number;
         if (generate_random<int>(0, 25) % 5 == 0) // it's a supervisor
         {
             if (current_number_of_supervisors < 9) // there are free supervisor slots
             {
-                switch (generate_random<int>(1, 3) % 3) // random number beteen 1 and 3
+                switch (generate_random<int>(1, 3) % 3) // random number between 1 and 3
                 {
                 case 0: // circle mask
                     if (Supervisors::get_num_of_supervisors_with_circle_mask() < 3)
@@ -360,7 +381,103 @@ int main()
         std::cout << "Competitor no. " << i << " is supervised by a supervisor with " << competitor[i]->isSupervisedBy << " mask" << std::endl;
     }
 
-    // free memory
+    std::cout << "RED LIGHT GREEN LIGHT BEGIN!\n";
+    RED_LIGHT_GREEN_LIGHT(competitor);
+
+    std::cout << "Competitors Alive:\n";
+    for (int i = 0; i < 99; i++)
+    {
+        competitor[i]->print_competitor_data_if_alive();
+    }
+
+    // after red_light_green_light 50 competitors are alive
+    // this means that every team has 12 competitors and 2 go directly to the next game
+    Competitors **team1[12], **team2[12], **team3[12], **team4[12];
+    int t1 = 0, t2 = 0, t3 = 0, t4 = 0;
+    int team_found = 0;
+    int count_competitors_alive = 0;
+
+    for (int i = 0; i < 99; i += 2)
+    {
+        switch (generate_random<int>(0, 80) % 4)
+        {
+        case 0:
+            if (t1 < 12)
+            {
+                team1[t1++] = &competitor[i];
+                team_found = 1;
+            }
+            break;
+        case 1:
+            if (t2 < 12)
+            {
+                team2[t2++] = &competitor[i];
+                team_found = 1;
+            }
+            break;
+        case 2:
+            if (t3 < 12)
+            {
+                team3[t3++] = &competitor[i];
+                team_found = 1;
+            }
+            break;
+        case 3:
+            if (t4 < 12)
+            {
+                team4[t4++] = &competitor[i];
+                team_found = 1;
+            }
+            break;
+        }
+
+        if (team_found == 0) // just search for an empty slot in other teams
+        {
+            if (t1 < 12)
+            {
+                team1[t1++] = &competitor[i];
+            }
+            else if (t2 < 12)
+            {
+                team2[t2++] = &competitor[i];
+            }
+            else if (t3 < 12)
+            {
+                team3[t3++] = &competitor[i];
+            }
+            else if (t4 < 12)
+            {
+                team4[t4++] = &competitor[i];
+            }
+        }
+        else
+        {
+            team_found = 0;
+        }
+    }
+
+    std::cout << "Team1:\n";
+    for (int i = 0; i < 12; i++)
+    {
+        (*team1[i])->print_all_data();
+    }
+    std::cout << "Team2:\n";
+    for (int i = 0; i < 12; i++)
+    {
+        (*team2[i])->print_all_data();
+    }
+    std::cout << "Team3:\n";
+    for (int i = 0; i < 12; i++)
+    {
+        (*team3[i])->print_all_data();
+    }
+    std::cout << "Team4:\n";
+    for (int i = 0; i < 12; i++)
+    {
+        (*team4[i])->print_all_data();
+    }
+
+    // free the memory
     for (int i = 0; i < 99; i++)
     {
         delete competitor[i];
