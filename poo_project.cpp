@@ -41,12 +41,21 @@ public:
     std::string getCity();
     int getDebt();
     int getWeight();
+    void setDebt(int);
 };
 int Players::getWeight()
 {
     return this->weight;
 }
+void Players::setDebt(int val)
+{
+    this->debt = val;
+}
 
+int Players::getDebt()
+{
+    return this->debt;
+}
 class Competitors : public Players
 {
 public:                                     // private
@@ -278,7 +287,7 @@ void PRINT_ALL_COMPETITORS_ALIVE(Competitors *competitor[])
 
 void RED_LIGHT_GREEN_LIGHT(Competitors *competitor[])
 {
-    std::cout << "\nRED LIGHT GREEN LIGHT BEGIN!\n";
+    std::cout << "\nRED LIGHT GREEN LIGHT BEGINS!\n";
     for (int i = 1; i < 99; i += 2)
     {
         --(*competitor[i]); // eliminate the competitor
@@ -309,7 +318,7 @@ void TUG_OF_WAR(Competitors **team1[], Competitors **team2[], Competitors **team
         sum4 += (*team4[i])->getWeight();
     }
 
-    std::cout << "\nTUG OF WAR BEGIN!\n";
+    std::cout << "\nTUG OF WAR BEGINS!\n";
     std::cout << "\nTeam1:[total weight: " << sum1 << "]\n";
     for (int i = 0; i < 12; i++)
     {
@@ -707,6 +716,7 @@ int main()
     }
 
     std::cout << "\nCompetitors that skip the tug of war game: " << competitor[lucky_player1]->getIndex_of_competitor() << ", " << competitor[lucky_player2]->getIndex_of_competitor() << std::endl;
+
     TUG_OF_WAR(team1, team2, team3, team4);
 
     // if 2 or more teams had same weight == max weight =>those teams were not eliminated
@@ -718,7 +728,7 @@ int main()
     breakk = 0;
     int breakk2 = 0;
 
-    std::cout << "\nMARBLES BEGIN!\n\n";
+    std::cout << "\nMARBLES BEGINS!\n\n";
     // k starts from the begining(from 0) and p starts from the end( from 98)
     // we search for pairs until k < p
     while (k < p)
@@ -771,16 +781,19 @@ int main()
     p = 98; // start from last competitor
     breakk = 0;
     breakk2 = 0;
-    int result, only_once = 0;
-    ;
+    int result;
 
-    while (k >= 0 && p >= 0)
+    std::cout << "\nGENKEN BEGINS!\n";
+
+    while (k > 0 && p >= 0) // p should be always smaller then k
     {
+
         if (breakk == 0) // we have not found first competitor alive from top to bottom;
         {
             if (competitor[k]->get_alive() == true) // if current competitor is alive
             {
                 breakk = 1; // set that we found it
+                p = k - 1;
             }
             else // else current competitor is not alive
             {
@@ -789,11 +802,6 @@ int main()
         }
         else // if we find first competitor alive from top to bottom, start searching for the second;
         {
-            if (only_once == 0)
-            {
-                only_once = 1;
-                p = k - 1; // start from the position k - 1
-            }
             if (breakk2 == 0) // if we did not find yet a competitor alive
             {
                 if (competitor[p]->get_alive() == true) // if it is alive
@@ -819,19 +827,69 @@ int main()
             if (competitor[k]->get_alive() == false) // competitor k+1 was eliminated
             {
                 k = p;
-                only_once = 0;
+                p--;
                 breakk2 = 0; // k stays on the current alive competitor, and with p we search for the next competitor alive
             }
             else if (competitor[p]->get_alive() == false) // competitor p+1 was eliminated
             {
-                p--;
                 breakk2 = 0;
             }
         }
     }
 
-    PRINT_ALL_COMPETITORS_ALIVE(competitor);
+    // find the index of the winner and calculate the sum of debts for competitors eliminated
+    int index_of_winner, index_of_supervisor_of_winner;
+    int sum_of_debts = 0;
+    int total_debt = 0;
 
+    for (int i = 0; i < 9; i++) // 9 supervisors
+    {
+        sum_of_debts = 0;
+        for (int j = 0; j < 11; j++) // every supervisor supervises 11 competitors
+        {
+            if (competitor[supervisor[i]->isSupervising[j]]->get_alive() == false)
+            {
+                sum_of_debts += competitor[supervisor[i]->isSupervising[j]]->getDebt();
+                total_debt += competitor[supervisor[i]->isSupervising[j]]->getDebt();
+            }
+            else // it s the winner
+            {
+                index_of_supervisor_of_winner = i;
+                index_of_winner = supervisor[i]->isSupervising[j]; // save index
+                sum_of_debts += competitor[index_of_winner]->getDebt() * 10;
+            }
+        }
+
+        supervisor[i]->setDebt(sum_of_debts - supervisor[i]->getDebt());
+    }
+
+    competitor[index_of_winner]->setDebt(total_debt - competitor[index_of_winner]->getDebt());
+
+    std::cout << "\nTHE WINNER OF GAME:\n";
+    competitor[index_of_winner]->print_competitor_data_if_alive();
+
+    std::cout << "\nAll supervisors:\n";
+    std::cout << "First Name" << std::setw(15) << "Last Name" << std::setw(15) << "Mask shape" << std::setw(15) << "City" << std::setw(15) << "Debt" << std::setw(15) << "Weight" << std::endl;
+    for (int i = 0; i < 100; i++)
+    {
+        std::cout << '-';
+    }
+    std::cout << std::endl;
+
+    // supervisor of winner will win the biggest amount of money
+    
+    int previous_max = supervisor[index_of_supervisor_of_winner]->getDebt();
+    int sum_max, save_index;
+    k = 0;
+    while (k < 9)
+    {
+        sum_max = supervisor[k]->getDebt();
+        save_index = k;
+        for (int i = 0; i < 9; i++)
+        {
+            if (supervisor[i]->getDebt() >)
+        }
+    }
     // free the memory
     for (int i = 0; i < 99; i++)
     {
