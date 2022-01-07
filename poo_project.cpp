@@ -14,7 +14,7 @@ T generate_random(int min, int max)
 
 class Players
 {
-public:                     // protected
+protected:                  // protected
     std::string first_name; // prenume
     std::string last_name;  // nume de familie
     std::string city;
@@ -43,6 +43,18 @@ public:
     int getWeight();
     void setDebt(int);
 };
+std::string Players::getFirstName()
+{
+    return this->first_name;
+}
+std::string Players::getLastName()
+{
+    return this->last_name;
+}
+std::string Players::getCity()
+{
+    return this->city;
+}
 int Players::getWeight()
 {
     return this->weight;
@@ -56,14 +68,15 @@ int Players::getDebt()
 {
     return this->debt;
 }
+
 class Competitors : public Players
 {
-public:                                     // private
+private:
     int index = 0;                          // index of competitor
     static int number_of_competitors_alive; // static variable that stores the number of competitors(number of objects created)
     std::string isSupervisedBy;             // stores the supervisor allocated for current
 
-    // public:
+public:
     Competitors(std::string first_name, std::string last_name, std::string city, int debt, int weight) : Players(first_name, last_name, city, debt, weight) // constructor
     {
         if (number_of_competitors_alive > 99)
@@ -80,12 +93,14 @@ public:                                     // private
 
     void operator--();                           // overloading operator; kills player
     int getIndex_of_competitor();                // getter; returns the index of competitor
-    static int getNumber_of_competitors_alive(); // getter that returns the number of competitor left alive
+    static int getNumber_of_competitors_alive(); // getter that returns the number of competitors left alive
     void print_all_data();                       // overriding
     void setSupervisor(std::string);             // setter
-    void print_competitor_data_if_alive();
-    bool get_alive();
-    friend void PRINT_ALL_COMPETITORS(Competitors);
+    void print_competitor_data_if_alive();       // method to print data if competitor is alive
+    bool get_alive();                            // getter (returns is_alive)
+    std::string get_his_supervisor();            // getter(returns the supervisor mask shape)
+
+    friend void PRINT_ALL_COMPETITORS(Competitors); // friend functions
     friend void PRINT_ALL_COMPETITORS_ALIVE(Competitors);
 };
 
@@ -93,17 +108,15 @@ int Competitors::number_of_competitors_alive = 0;
 
 bool Competitors::get_alive()
 {
-    if (this->is_alive == true)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return this->is_alive;
 }
 
-void Competitors::operator--() // overloading -- operator;eliminate current competitor
+std::string Competitors::get_his_supervisor()
+{
+    return this->isSupervisedBy;
+}
+
+void Competitors::operator--() // overloading -- operator; eliminate current competitor
 {
     if (number_of_competitors_alive < 1)
     {
@@ -115,8 +128,8 @@ void Competitors::operator--() // overloading -- operator;eliminate current comp
     }
     else
     {
-        this->is_alive = false;
-        number_of_competitors_alive--;
+        this->is_alive = false;        // eliminate competitor
+        number_of_competitors_alive--; // reduce by 1 the total number of competitors alive
     }
 }
 
@@ -147,6 +160,7 @@ void Competitors::print_competitor_data_if_alive()
         std::cout << this->first_name << std::setw(15) << this->last_name << std::setw(15) << this->index << std::setw(15) << this->city << std::setw(15) << this->debt << std::setw(15) << this->weight << std::endl;
     }
 }
+
 class Supervisors : public Players
 {
 public: // private
@@ -214,6 +228,7 @@ public:
         this->num_of_supervisors_with_rectangle_mask = old_supervisor.num_of_supervisors_with_rectangle_mask;
         this->isSupervising = old_supervisor.isSupervising;
     }
+
     // methods
     std::string getMask_shape();
     static int getNumber_of_supervisors();
@@ -336,7 +351,7 @@ void ELIMINATE_TEAM(Competitors **team[])
 {
     for (int i = 0; i < 12; i++)
     {
-        if ((*team[i])->is_alive == false) // check if player of the team is eliminated->if yes this means that that team is already eliminated or another error
+        if ((*team[i])->get_alive() == false) // check if player of the team is eliminated->if yes this means that that team is already eliminated or another error
         {
             throw "Team already eliminated or other error;\n"; // throw an error;
         }
@@ -664,7 +679,7 @@ int main()
     std::cout << std::endl;
     for (int i = 0; i < 99; i++)
     {
-        std::cout << "Competitor no. " << i + 1 << " is supervised by a supervisor with " << competitor[i]->isSupervisedBy << " mask" << std::endl;
+        std::cout << "Competitor no. " << i + 1 << " is supervised by a supervisor with " << competitor[i]->get_his_supervisor() << " mask" << std::endl;
     }
 
     RED_LIGHT_GREEN_LIGHT(competitor);
@@ -947,7 +962,7 @@ int main()
             if (competitor[*it]->get_alive() == false) // competitor that was supervised by supervisor[i] was eliminated
             {
                 sum_of_debts += competitor[*it]->getDebt(); // supervisor[i] receives his debt
-                total_debt += competitor[*it]->getDebt();   // in the same time calculate the total debts for the winner
+                total_debt += competitor[*it]->getDebt();   // in the same iteration calculate the total debts for the winner
             }
             else // it s the winner
             {
@@ -962,15 +977,15 @@ int main()
         // calculate how much money every team of supervisors won
         if (supervisor[i]->getMask_shape() == "rectangle")
         {
-            rectangle.add(supervisor[i]->getDebt()); // for team with rectangle masks
+            rectangle.add(sum_of_debts); // for team with rectangle masks
         }
         else if (supervisor[i]->getMask_shape() == "triangle")
         {
-            triangle.add(supervisor[i]->getDebt()); // for team with triangle mask
+            triangle.add(sum_of_debts); // for team with triangle mask
         }
         else if (supervisor[i]->getMask_shape() == "circle")
         {
-            circle.add(supervisor[i]->getDebt()); // for team with circle mask
+            circle.add(sum_of_debts); // for team with circle mask
         }
     }
 
@@ -981,18 +996,19 @@ int main()
     std::cout << "=======================================================================================\n";
     std::cout << "=======================================================================================\n";
     std::cout << "=======================================================================================\n";
-    std::cout << "\nTHE WINNER OF THE GAME:\n";
-    competitor[index_of_winner]->print_competitor_data_if_alive();
+    std::cout << "\nTHE WINNER OF THE GAME:\n[Competitor]: ";
+    std::cout << competitor[index_of_winner]->getFirstName() << " " << competitor[index_of_winner]->getLastName() << ", from " << competitor[index_of_winner]->getCity() << std::endl;
+    std::cout << "Winner won: " << competitor[index_of_winner]->getDebt() << " test: " << std::endl;
 
     // print all supervisors descendig by the money they won
-    std::cout << "=======================================================================================\n";
-    std::cout << "=======================================================================================\n";
     std::cout << "=======================================================================================\n";
 
     // sort and print all supervisor
     SORT_SUPERVISORS(supervisor);
-    PRINT_ALL_SUPERVISORS(supervisor);
-
+    for (int i = 0; i < 9; i++)
+    {
+        std::cout << "[Supervisor]: " << supervisor[i]->getFirstName() << " " << supervisor[i]->getLastName() << " [" << supervisor[i]->getMask_shape() << " mask], from: " << supervisor[i]->getCity() << ", won: " << supervisor[i]->getDebt() << std::endl;
+    }
     // print the team of supervisors with the most money
     if (circle.getSum() >= triangle.getSum() && circle.getSum() >= rectangle.getSum())
     {
