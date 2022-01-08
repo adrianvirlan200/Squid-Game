@@ -14,9 +14,9 @@ T generate_random(int min, int max)
 
 class Players
 {
-protected:                  // protected
-    std::string first_name; // prenume
-    std::string last_name;  // nume de familie
+protected:
+    std::string first_name;
+    std::string last_name;
     std::string city;
     int debt;   // random between 10000 and 100000
     int weight; // random between 50 and 100
@@ -73,8 +73,8 @@ class Competitors : public Players
 {
 private:
     int index = 0;                          // index of competitor
-    static int number_of_competitors_alive; // static variable that stores the number of competitors(number of objects created)
-    std::string isSupervisedBy;             // stores the supervisor allocated for current
+    static int number_of_competitors_alive; // static variable that stores the number of competitors(number of objects created in the begining)
+    std::string isSupervisedBy;             // stores the mask shape of supervisor mask shape allocated for current
 
 public:
     Competitors(std::string first_name, std::string last_name, std::string city, int debt, int weight) : Players(first_name, last_name, city, debt, weight) // constructor
@@ -86,8 +86,8 @@ public:
         else
         {
             number_of_competitors_alive++;
+            this->index = number_of_competitors_alive;
         }
-        this->index = number_of_competitors_alive;
     }
     ~Competitors() {} // destructor
 
@@ -148,29 +148,69 @@ int Competitors::getNumber_of_competitors_alive()
     return number_of_competitors_alive;
 }
 
+// aux method to print all data on
+void space(std::string &string, int n)
+{
+    int initial_length = string.length();
+    for (int i = initial_length; i < n * 15; i++)
+    {
+        string.append(" ");
+    }
+}
+// print all data on coloms
 void Competitors::print_all_data()
 {
-    std::cout << this->first_name << std::setw(15) << this->last_name << std::setw(15) << this->index << std::setw(15) << this->city << std::setw(15) << this->debt << std::setw(15) << this->weight << std::endl;
+    std::string print;
+    int i = 1;
+
+    print.append(this->first_name);
+    space(print, i++);
+    print.append(this->last_name);
+    space(print, i++);
+    print.append(std::to_string(this->index));
+    space(print, i++);
+    print.append(this->city);
+    space(print, i++);
+    print.append(std::to_string(this->debt));
+    space(print, i++);
+    print.append(std::to_string(this->weight));
+
+    std::cout << print << std::endl;
 }
 
 void Competitors::print_competitor_data_if_alive()
 {
     if (this->is_alive == true)
     {
-        std::cout << this->first_name << std::setw(15) << this->last_name << std::setw(15) << this->index << std::setw(15) << this->city << std::setw(15) << this->debt << std::setw(15) << this->weight << std::endl;
+        std::string print;
+        int i = 1;
+
+        print.append(this->first_name);
+        space(print, i++);
+        print.append(this->last_name);
+        space(print, i++);
+        print.append(std::to_string(this->index));
+        space(print, i++);
+        print.append(this->city);
+        space(print, i++);
+        print.append(std::to_string(this->debt));
+        space(print, i++);
+        print.append(std::to_string(this->weight));
+
+        std::cout << print << std::endl;
     }
 }
 
 class Supervisors : public Players
 {
-public: // private
+private: // private
     std::string mask_shape;
     static int total_number_of_supervisors;
     static int num_of_supervisors_with_circle_mask;    // max3
     static int num_of_supervisors_with_triangle_mask;  // max3
     static int num_of_supervisors_with_rectangle_mask; // max3
-    std::vector<int> isSupervising;                    // index for competitor vector
 public:
+    std::vector<int> isSupervising; // index for competitor vector
     Supervisors(std::string first_name, std::string last_name, std::string city, int debt, int weight, std::string mask_shape) : Players(first_name, last_name, city, debt, weight)
     {
         total_number_of_supervisors++;
@@ -232,10 +272,11 @@ public:
     // methods
     std::string getMask_shape();
     static int getNumber_of_supervisors();
-    void print_all_data();                                   // overriding
     static int get_num_of_supervisors_with_circle_mask();    // static getters
     static int get_num_of_supervisors_with_triangle_mask();  // static getters
     static int get_num_of_supervisors_with_rectangle_mask(); // static getters
+    void print_all_data();                                   // overriding
+
     friend void PRINT_ALL_SUPERVISORS(Supervisors);
     friend void SORT_SUPERVISORS(Supervisors);
 };
@@ -269,7 +310,22 @@ int Supervisors::get_num_of_supervisors_with_rectangle_mask()
 
 void Supervisors::print_all_data()
 {
-    std::cout << this->first_name << std::setw(15) << this->last_name << std::setw(15) << this->mask_shape << std::setw(15) << this->city << std::setw(15) << this->debt << std::setw(15) << this->weight << std::endl;
+    std::string print;
+    int i = 1;
+
+    print.append(this->first_name);
+    space(print, i++);
+    print.append(this->last_name);
+    space(print, i++);
+    print.append(this->mask_shape);
+    space(print, i++);
+    print.append(this->city);
+    space(print, i++);
+    print.append(std::to_string(this->debt));
+    space(print, i++);
+    print.append(std::to_string(this->weight));
+
+    std::cout << print << std::endl;
 }
 
 // FUNCTIONS
@@ -277,12 +333,9 @@ void Supervisors::print_all_data()
 void PRINT_ALL_SUPERVISORS(Supervisors *supervisor[])
 {
     std::cout << "\nAll supervisors:\n";
-    std::cout << "First Name" << std::setw(15) << "Last Name" << std::setw(15) << "Mask shape" << std::setw(15) << "City" << std::setw(15) << "Debt" << std::setw(15) << "Weight" << std::endl;
-    for (int i = 0; i < 100; i++)
-    {
-        std::cout << '-';
-    }
-    std::cout << std::endl;
+    std::cout << "First Name     Last Name      Mask Shape     City           Debt           Weight" << std::endl;
+    std::cout << "---------------------------------------------------------------------------------\n";
+
     for (int i = 0; i < 9; i++)
     {
         supervisor[i]->print_all_data();
@@ -311,12 +364,9 @@ void SORT_SUPERVISORS(Supervisors *supervisor[])
 void PRINT_ALL_COMPETITORS(Competitors *competitor[])
 {
     std::cout << "\nAll competitors:\n";
-    std::cout << "First Name" << std::setw(15) << "Last Name" << std::setw(15) << "Index" << std::setw(15) << "City" << std::setw(15) << "Debt" << std::setw(15) << "Weight" << std::endl;
-    for (int i = 0; i < 100; i++)
-    {
-        std::cout << '-';
-    }
-    std::cout << std::endl;
+    std::cout << "First Name     Last Name      Index          City           Debt           Weight" << std::endl;
+    std::cout << "---------------------------------------------------------------------------------\n";
+
     for (int i = 0; i < 99; i++)
     {
         competitor[i]->print_all_data();
@@ -326,12 +376,9 @@ void PRINT_ALL_COMPETITORS(Competitors *competitor[])
 void PRINT_ALL_COMPETITORS_ALIVE(Competitors *competitor[])
 {
     std::cout << "\nAll competitors Alive:\n";
-    std::cout << "First Name" << std::setw(15) << "Last Name" << std::setw(15) << "Index" << std::setw(15) << "City" << std::setw(15) << "Debt" << std::setw(15) << "Weight" << std::endl;
-    for (int i = 0; i < 100; i++)
-    {
-        std::cout << '-';
-    }
-    std::cout << std::endl;
+    std::cout << "First Name     Last Name      Index          City           Debt           Weight" << std::endl;
+    std::cout << "---------------------------------------------------------------------------------\n";
+
     for (int i = 0; i < 99; i++)
     {
         competitor[i]->print_competitor_data_if_alive();
@@ -554,8 +601,37 @@ int main()
     int assigned = 0;
     for (int i = 0; i < 108; i++) // dynamically allocating memory for every player;
     {
+
+        // get data for all players
+        // randomly generate names
+        std::string first_name, last_name, city;
+        int max_Fname, max_Lname, max_city;
+        max_Fname = generate_random<int>(3, 10); // min 3 letters, max 10
+        max_Lname = generate_random<int>(3, 10);
+        max_city = generate_random<int>(3, 10);
+
+        first_name.push_back(generate_random<char>(65, 90)); // upper case
+        last_name.push_back(generate_random<char>(65, 90));
+        city.push_back(generate_random<char>(65, 90));
+
+        // lower cases
+        for (int i = 1; i < max_Fname; i++)
+        {
+            first_name.push_back(generate_random<char>(97, 122));
+        }
+
+        for (int i = 1; i < max_Lname; i++)
+        {
+            last_name.push_back(generate_random<char>(97, 122));
+        }
+        for (int i = 1; i < max_city; i++)
+        {
+            city.push_back(generate_random<char>(97, 122));
+        }
+
         // if the number between 0-25 generated random is divided by 5 =>that player is a supervisor,else it is a competitor
         // repeat the process for every player until all slots are taken
+
         // if one class of supervisors is full, then just search for another free slot in others classes
         // if no slot is available, then that player is a competitor
 
@@ -570,21 +646,21 @@ int main()
                     if (Supervisors::get_num_of_supervisors_with_circle_mask() < 3)
                     {
                         assigned++;
-                        supervisor[current_number_of_supervisors++] = new Supervisors("FirstName", "LastName", "City", generate_random<int>(10000, 100000), generate_random<int>(50, 100), "circle");
+                        supervisor[current_number_of_supervisors++] = new Supervisors(first_name, last_name, city, generate_random<int>(10000, 100000), generate_random<int>(50, 100), "circle");
                     }
                     break;
                 case 1: // rectangle mask
                     if (Supervisors::get_num_of_supervisors_with_rectangle_mask() < 3)
                     {
                         assigned++;
-                        supervisor[current_number_of_supervisors++] = new Supervisors("FirstName", "LastName", "City", generate_random<int>(10000, 100000), generate_random<int>(50, 100), "rectangle");
+                        supervisor[current_number_of_supervisors++] = new Supervisors(first_name, last_name, city, generate_random<int>(10000, 100000), generate_random<int>(50, 100), "rectangle");
                     }
                     break;
                 case 2: // triangle
                     if (Supervisors::get_num_of_supervisors_with_triangle_mask() < 3)
                     {
                         assigned++;
-                        supervisor[current_number_of_supervisors++] = new Supervisors("FirstName", "LastName", "City", generate_random<int>(10000, 100000), generate_random<int>(50, 100), "triangle");
+                        supervisor[current_number_of_supervisors++] = new Supervisors(first_name, last_name, city, generate_random<int>(10000, 100000), generate_random<int>(50, 100), "triangle");
                     }
                     break;
                 }
@@ -592,15 +668,15 @@ int main()
                 {
                     if (Supervisors::get_num_of_supervisors_with_circle_mask() < 3) // add circle mask if free
                     {
-                        supervisor[current_number_of_supervisors++] = new Supervisors("FirstName", "LastName", "City", generate_random<int>(10000, 100000), generate_random<int>(50, 100), "circle");
+                        supervisor[current_number_of_supervisors++] = new Supervisors(first_name, last_name, city, generate_random<int>(10000, 100000), generate_random<int>(50, 100), "circle");
                     }
                     else if (Supervisors::get_num_of_supervisors_with_rectangle_mask() < 3) // add rectangle mask if free
                     {
-                        supervisor[current_number_of_supervisors++] = new Supervisors("FirstName", "LastName", "City", generate_random<int>(10000, 100000), generate_random<int>(50, 100), "rectangle");
+                        supervisor[current_number_of_supervisors++] = new Supervisors(first_name, last_name, city, generate_random<int>(10000, 100000), generate_random<int>(50, 100), "rectangle");
                     }
                     else if (Supervisors::get_num_of_supervisors_with_triangle_mask() < 3) // add triangle mask if free
                     {
-                        supervisor[current_number_of_supervisors++] = new Supervisors("FirstName", "LastName", "City", generate_random<int>(10000, 100000), generate_random<int>(50, 100), "triangle");
+                        supervisor[current_number_of_supervisors++] = new Supervisors(first_name, last_name, city, generate_random<int>(10000, 100000), generate_random<int>(50, 100), "triangle");
                     }
                 }
                 else // we added a supervisor, reset assigned for the next supervisor
@@ -610,28 +686,32 @@ int main()
             }
             else // else all slots for supervisors are occupied, add current user as a competitor
             {
-                competitor[current_number_of_competitors++] = new Competitors("FirstName", "LastName", "City", generate_random<int>(10000, 100000), generate_random<int>(50, 100));
+                competitor[current_number_of_competitors++] = new Competitors(first_name, last_name, city, generate_random<int>(10000, 100000), generate_random<int>(50, 100));
             }
         }
         else // it's a competitor
         {
             if (current_number_of_competitors < 99) // if there are free slots for competitors, add current user as a competitor
             {
-                competitor[current_number_of_competitors++] = new Competitors("FirstName", "LastName", "City", generate_random<int>(10000, 100000), generate_random<int>(50, 100));
+                competitor[current_number_of_competitors++] = new Competitors(first_name, last_name, city, generate_random<int>(10000, 100000), generate_random<int>(50, 100));
             }
             else if (Supervisors::get_num_of_supervisors_with_circle_mask() < 3) // if there are not free slots available, add current player as a supervisor(repeat the process of adding a supervisor)
             {
-                supervisor[current_number_of_supervisors++] = new Supervisors("FirstName", "LastName", "City", generate_random<int>(10000, 100000), generate_random<int>(50, 100), "circle");
+                supervisor[current_number_of_supervisors++] = new Supervisors(first_name, last_name, city, generate_random<int>(10000, 100000), generate_random<int>(50, 100), "circle");
             }
             else if (Supervisors::get_num_of_supervisors_with_rectangle_mask() < 3)
             {
-                supervisor[current_number_of_supervisors++] = new Supervisors("FirstName", "LastName", "City", generate_random<int>(10000, 100000), generate_random<int>(50, 100), "rectangle");
+                supervisor[current_number_of_supervisors++] = new Supervisors(first_name, last_name, city, generate_random<int>(10000, 100000), generate_random<int>(50, 100), "rectangle");
             }
             else if (Supervisors::get_num_of_supervisors_with_triangle_mask() < 3)
             {
-                supervisor[current_number_of_supervisors++] = new Supervisors("FirstName", "LastName", "City", generate_random<int>(10000, 100000), generate_random<int>(50, 100), "triangle");
+                supervisor[current_number_of_supervisors++] = new Supervisors(first_name, last_name, city, generate_random<int>(10000, 100000), generate_random<int>(50, 100), "triangle");
             }
         }
+
+        first_name.clear();
+        last_name.clear();
+        city.clear();
     }
 
     PRINT_ALL_COMPETITORS(competitor);
@@ -998,7 +1078,7 @@ int main()
     std::cout << "=======================================================================================\n";
     std::cout << "\nTHE WINNER OF THE GAME:\n[Competitor]: ";
     std::cout << competitor[index_of_winner]->getFirstName() << " " << competitor[index_of_winner]->getLastName() << ", from " << competitor[index_of_winner]->getCity() << std::endl;
-    std::cout << "Winner won: " << competitor[index_of_winner]->getDebt() << " test: " << std::endl;
+    std::cout << "Winner won: " << competitor[index_of_winner]->getDebt() << std::endl;
 
     // print all supervisors descendig by the money they won
     std::cout << "=======================================================================================\n";
@@ -1009,6 +1089,7 @@ int main()
     {
         std::cout << "[Supervisor]: " << supervisor[i]->getFirstName() << " " << supervisor[i]->getLastName() << " [" << supervisor[i]->getMask_shape() << " mask], from: " << supervisor[i]->getCity() << ", won: " << supervisor[i]->getDebt() << std::endl;
     }
+    std::cout << std::endl;
     // print the team of supervisors with the most money
     if (circle.getSum() >= triangle.getSum() && circle.getSum() >= rectangle.getSum())
     {
