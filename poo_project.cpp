@@ -2,7 +2,7 @@
 //#include <stdlib.h>
 #include <time.h>
 //#include <math.h>
-#include <iomanip> // std::setw
+//#include <iomanip> // std::setw
 #include <vector>
 // template function that generate random numbers between 2 values
 template <class T>
@@ -12,6 +12,7 @@ T generate_random(int min, int max)
     return (std::rand() * std::rand()) % (max - min + 1) + min;
 }
 
+// class for players
 class Players
 {
 protected:
@@ -36,12 +37,12 @@ public:
     Players();                         // defauld constructor
     virtual void print_all_data() = 0; // pure virtual function
 
-    std::string getFirstName();
+    std::string getFirstName(); // getters
     std::string getLastName();
     std::string getCity();
     int getDebt();
     int getWeight();
-    void setDebt(int);
+    void setDebt(int); // setter for debt
 };
 std::string Players::getFirstName()
 {
@@ -69,21 +70,23 @@ int Players::getDebt()
     return this->debt;
 }
 
+// class for competitors
 class Competitors : public Players
 {
 private:
-    int index = 0;                          // index of competitor
+    int index = 0;                          // real index of competitor(1...99)
     static int number_of_competitors_alive; // static variable that stores the number of competitors(number of objects created in the begining)
+                                            // 0...98
     std::string isSupervisedBy;             // stores the mask shape of supervisor mask shape allocated for current
 
 public:
     Competitors(std::string first_name, std::string last_name, std::string city, int debt, int weight) : Players(first_name, last_name, city, debt, weight) // constructor
     {
-        if (number_of_competitors_alive > 99)
+        if (number_of_competitors_alive > 99) // more then 99 competitors
         {
-            throw "Error: Too many competitors;\n";
+            throw "Error: Too many competitors;\n"; // throw error
         }
-        else
+        else // else increase the number of competitors by 1 and assign index to current competitor
         {
             number_of_competitors_alive++;
             this->index = number_of_competitors_alive;
@@ -94,9 +97,9 @@ public:
     void operator--();                           // overloading operator; kills player
     int getIndex_of_competitor();                // getter; returns the index of competitor
     static int getNumber_of_competitors_alive(); // getter that returns the number of competitors left alive
-    void print_all_data();                       // overriding
-    void setSupervisor(std::string);             // setter
-    void print_competitor_data_if_alive();       // method to print data if competitor is alive
+    void print_all_data();                       // overriding method to print all data for current competitor
+    void setSupervisor(std::string);             // setter sets the supervisor for competitor
+    void print_competitor_data_if_alive();       // method to print data if competitor is alive(is_alive == true)
     bool get_alive();                            // getter (returns is_alive)
     std::string get_his_supervisor();            // getter(returns the supervisor mask shape)
 
@@ -118,7 +121,8 @@ std::string Competitors::get_his_supervisor()
 
 void Competitors::operator--() // overloading -- operator; eliminate current competitor
 {
-    if (number_of_competitors_alive < 1)
+    // check if there are competitors alive left and if current competitor is alive
+    if (number_of_competitors_alive < 1) // min 1 player
     {
         throw "Error: 0 competitors alive;\n"; // throw exception
     }
@@ -148,10 +152,10 @@ int Competitors::getNumber_of_competitors_alive()
     return number_of_competitors_alive;
 }
 
-// aux method to print all data on
+// aux method to print all data on coloms (the space between coloms is the same, although the names have diffrent sizes)
 void space(std::string &string, int n)
 {
-    int initial_length = string.length();
+    int initial_length = string.length(); // save the initial length of the string, because we will modify the length every iteration
     for (int i = initial_length; i < n * 15; i++)
     {
         string.append(" ");
@@ -182,35 +186,22 @@ void Competitors::print_competitor_data_if_alive()
 {
     if (this->is_alive == true)
     {
-        std::string print;
-        int i = 1;
-
-        print.append(this->first_name);
-        space(print, i++);
-        print.append(this->last_name);
-        space(print, i++);
-        print.append(std::to_string(this->index));
-        space(print, i++);
-        print.append(this->city);
-        space(print, i++);
-        print.append(std::to_string(this->debt));
-        space(print, i++);
-        print.append(std::to_string(this->weight));
-
-        std::cout << print << std::endl;
+        this->print_all_data();
     }
 }
 
+// class for supervisor
 class Supervisors : public Players
 {
-private: // private
-    std::string mask_shape;
-    static int total_number_of_supervisors;
-    static int num_of_supervisors_with_circle_mask;    // max3
-    static int num_of_supervisors_with_triangle_mask;  // max3
-    static int num_of_supervisors_with_rectangle_mask; // max3
+private:
+    std::string mask_shape; // type of mask
+    // static variables that stores the total number of supervisors and the num of supervisors with every type of mask
+    static int total_number_of_supervisors;            // 0...8
+    static int num_of_supervisors_with_circle_mask;    // 0,1,2
+    static int num_of_supervisors_with_triangle_mask;  // 0,1,2
+    static int num_of_supervisors_with_rectangle_mask; // 0,1,2
 public:
-    std::vector<int> isSupervising; // index for competitor vector
+    std::vector<int> isSupervising; // vector that stores the index of every competitor that is supervised by current supervisor
     Supervisors(std::string first_name, std::string last_name, std::string city, int debt, int weight, std::string mask_shape) : Players(first_name, last_name, city, debt, weight)
     {
         total_number_of_supervisors++;
@@ -308,6 +299,7 @@ int Supervisors::get_num_of_supervisors_with_rectangle_mask()
     return num_of_supervisors_with_rectangle_mask;
 }
 
+// method to print current supervisor data(similar to print_all_data of competitor)
 void Supervisors::print_all_data()
 {
     std::string print;
@@ -388,7 +380,7 @@ void PRINT_ALL_COMPETITORS_ALIVE(Competitors *competitor[])
 void RED_LIGHT_GREEN_LIGHT(Competitors *competitor[])
 {
     std::cout << "\nRED LIGHT GREEN LIGHT BEGINS!\n";
-    for (int i = 1; i < 99; i += 2)
+    for (int i = 1; i < 99; i += 2) // index of array = real_index_of_player -1
     {
         --(*competitor[i]); // eliminate the competitor
     }
@@ -396,11 +388,12 @@ void RED_LIGHT_GREEN_LIGHT(Competitors *competitor[])
 // aux function of TUG_OF_WAR game, used to eliminate a team
 void ELIMINATE_TEAM(Competitors **team[])
 {
+    // eliminate every player of the team
     for (int i = 0; i < 12; i++)
     {
         if ((*team[i])->get_alive() == false) // check if player of the team is eliminated->if yes this means that that team is already eliminated or another error
         {
-            throw "Team already eliminated or other error;\n"; // throw an error;
+            throw "Team/player already eliminated or other error;\n"; // throw an error;
         }
         else
         {
@@ -475,7 +468,7 @@ void MARBLES(Competitors *competitor1, int rand_num_1, Competitors *competitor2,
 {
     if (competitor1->get_alive() == false || competitor2->get_alive() == false)
     {
-        throw "Competitor already eliminated;";
+        throw "One competitor already eliminated;";
     }
     // competitor with bigger number is eliminated
     if (rand_num_1 > rand_num_2)
@@ -555,38 +548,43 @@ int GENKEN(Competitors *competitor1, int num_1, Competitors *competitor2, int nu
         throw "Invalid numbers;\n";
     }
 
-    return 1; // we eliminated 1 competitor
+    return 1; // 1 competitor was eliminated
 }
+
 // aux class to store the amount of money every team of supervisors won
 class Aux
 {
 private:
-    int sum; // stores the sum of money won
-    std::string mask;
+    int sum;          // stores the sum of money won
+    std::string mask; // stores the mask type of the team
 
 public:
-    Aux(std::string mask) // default constructor sets sum to 0;
+    Aux(std::string mask) // default constructor sets sum to 0 and mask;
     {
         this->mask = mask;
         sum = 0;
     }
+
     ~Aux() {}
+
     // getter returns the sum
     int getSum()
     {
         return this->sum;
     }
+
     // method add num to sum
     void add(int num)
     {
         sum += num;
     }
 
-    void print() // for printing the team with the most money won
+    void print() // for printing the team
     {
         std::cout << "Team of supervisors with " << mask << " mask won the most money: " << sum << std::endl;
     }
 };
+
 // main function
 int main()
 {
@@ -606,13 +604,13 @@ int main()
         // randomly generate names
         std::string first_name, last_name, city;
         int max_Fname, max_Lname, max_city;
-        max_Fname = generate_random<int>(3, 10); // min 3 letters, max 10
+        max_Fname = generate_random<int>(3, 10); // every name has: min 3 letters, max 10
         max_Lname = generate_random<int>(3, 10);
         max_city = generate_random<int>(3, 10);
 
-        first_name.push_back(generate_random<char>(65, 90)); // upper case
-        last_name.push_back(generate_random<char>(65, 90));
-        city.push_back(generate_random<char>(65, 90));
+        first_name.push_back(generate_random<char>(65, 90)); // first letter is capital letter
+        last_name.push_back(generate_random<char>(65, 90));  // first letter is capital letter
+        city.push_back(generate_random<char>(65, 90));       // first letter is capital letter
 
         // lower cases
         for (int i = 1; i < max_Fname; i++)
@@ -634,6 +632,8 @@ int main()
 
         // if one class of supervisors is full, then just search for another free slot in others classes
         // if no slot is available, then that player is a competitor
+
+        // if no slots for competitor is available, then that player is a supervisor
 
         // generate random number;
         if (generate_random<int>(0, 25) % 5 == 0) // it's a supervisor
@@ -709,6 +709,7 @@ int main()
             }
         }
 
+        // reset the strings for the next competitors
         first_name.clear();
         last_name.clear();
         city.clear();
@@ -718,6 +719,7 @@ int main()
     PRINT_ALL_SUPERVISORS(supervisor);
 
     int count = 0;
+
     for (int i = 0; i < 9; i++) // 9 supervisors
     {
         for (int j = 0; j < 11; j++) // each supervisor has 11 competitors to supervise
@@ -727,9 +729,12 @@ int main()
     }
 
     std::cout << std::endl;
+
+    // print what competitors are allocated for every supervisor
     for (int i = 0; i < 9; i++)
     {
-        std::cout << "Supervisor " << i + 1 << " with " << supervisor[i]->getMask_shape() << " mask is supervising competitor no.:" << std::setw(10);
+        std::cout << "Supervisor " << i + 1 << " with " << supervisor[i]->getMask_shape() << " mask is supervising competitor no.:"
+                  << "\t";
         for (std::vector<int>::iterator it = supervisor[i]->isSupervising.begin(); it != supervisor[i]->isSupervising.end(); it++)
         {
             std::cout << *it + 1 << " ";
@@ -737,8 +742,10 @@ int main()
         std::cout << std::endl;
     }
 
+    // search what supervisor is supervising each competitor
     int i = 0;
-    int breakk = 0;
+    int breakk = 0; // breakk == 0 => didn't find competitor's i supervisor
+
     while (i < 99) // 99 competitors
     {
         breakk = 0;                                // reset
@@ -757,12 +764,16 @@ int main()
     }
 
     std::cout << std::endl;
+
+    // print supervisor for every competitor
     for (int i = 0; i < 99; i++)
     {
         std::cout << "Competitor no. " << i + 1 << " is supervised by a supervisor with " << competitor[i]->get_his_supervisor() << " mask" << std::endl;
     }
 
+    // first game
     RED_LIGHT_GREEN_LIGHT(competitor);
+
     // after this game there should be 50 competitors alive
     // test this:
     try
@@ -783,7 +794,7 @@ int main()
     // after red_light_green_light 50 competitors are alive
     // there are 4 teams
     // this means that every team has 12 competitors and 2 go directly to the next game
-    Competitors **team[4][12];
+    Competitors **team[4][12]; // 4 teams, every team has 12 competitor
     int t1 = 0, t2 = 0, t3 = 0, t4 = 0;
     int team_found = 0;
 
@@ -791,7 +802,7 @@ int main()
 
     int lucky_player1 = generate_random<int>(0, 98);
     int lucky_player2;
-    if (lucky_player1 % 2 != 0) // if number is odd(competitor index is even, but that competitor is already eliminated)
+    if (lucky_player1 % 2 != 0) // if number is odd(competitor real index is even, but that competitor is already eliminated)
     {
         lucky_player1++; // so choose the next competitor
     }
@@ -799,14 +810,14 @@ int main()
     do // to avoid lucky_player1 == lucky_plater2, generate random numbers until lucky_player1 != lucky_player2
     {
         lucky_player2 = generate_random<int>(0, 98);
-        if (lucky_player2 % 2 != 0) // if number is odd(competitor index is even,but that competitor is already eliminated)
+        if (lucky_player2 % 2 != 0) // if number is odd(competitor real index is even,but that competitor is already eliminated)
         {
             lucky_player2++; // so choose the next competitor
         }
 
     } while (lucky_player1 == lucky_player2);
 
-    for (int i = 0; i < 99; i += 2) // all competitors with odd index
+    for (int i = 0; i < 99; i += 2) // all competitors with odd real index
     {
         if (i != lucky_player2 && i != lucky_player1) // skip the lucky competitors
         {
@@ -873,12 +884,12 @@ int main()
     TUG_OF_WAR(team);
 
     // if 2 or more teams had same weight == max weight =>those teams were not eliminated
-    // so now there are 14, 26, 38 or 50 competitors left(so an even number)
+    // so now there are 14, 26, 38 or 50 competitors left
     // test this:
     try
     {
-        // if number of competitors alive -2(those who skip this game) is not a power of 12 or ! 0 < num_alive < 50
-        if ((Competitors::getNumber_of_competitors_alive() - 2) % 12 != 0 || Competitors::getNumber_of_competitors_alive() > 50 || Competitors::getNumber_of_competitors_alive() < 0)
+        // if number of competitors alive -2(those who skip this game) is not a power of 12 or (!) 14 < num_alive < 50
+        if ((Competitors::getNumber_of_competitors_alive() - 2) % 12 != 0 || Competitors::getNumber_of_competitors_alive() > 50 || Competitors::getNumber_of_competitors_alive() < 14)
         {
             throw "Something went wrong;\nExiting...\n"; // throw exception
         }
@@ -897,7 +908,8 @@ int main()
 
     std::cout << "\nMARBLES BEGINS!\n\n";
     // k starts from the begining(from 0) and p starts from the end( from 98)
-    // we search for pairs until k < p
+
+    // search for pairs until k < p
     while (k < p)
     {
         if (breakk == 0) // if we did not find yet a competitor alive
@@ -960,7 +972,7 @@ int main()
             if (competitor[k]->get_alive() == true) // if current competitor is alive
             {
                 breakk = 1; // set that we found it
-                p = k - 1;
+                p = k - 1;  // p starts 1 index below k
             }
             else // else current competitor is not alive
             {
@@ -1000,13 +1012,13 @@ int main()
 
             if (competitor[k]->get_alive() == false) // competitor k+1 was eliminated
             {
-                k = p;
-                p--;
+                k = p;       // index k = p;
+                p--;         // now p starts 1 position below k
                 breakk2 = 0; // k stays on the current alive competitor, and with p we search for the next competitor alive
             }
             else if (competitor[p]->get_alive() == false) // competitor p+1 was eliminated
             {
-                breakk2 = 0;
+                breakk2 = 0; // k is alive, so search for the second competitor alive with p
             }
         }
     }
@@ -1033,22 +1045,23 @@ int main()
     int total_debt = 0;
 
     // find team of supervisors that won the most money
-    Aux rectangle("rectangle"), circle("circle"), triangle("triangle");
+    Aux rectangle("rectangle"), circle("circle"), triangle("triangle"); // create an object for every team of supervisors
+
     for (int i = 0; i < 9; i++) // 9 supervisors
     {
-        sum_of_debts = 0;                                                                                                          // sum of debts for every supervisor
+        sum_of_debts = 0;                                                                                                          // the sum starts from 0 for every supervisor                                                                                                   // sum of debts for every supervisor
         for (std::vector<int>::iterator it = supervisor[i]->isSupervising.begin(); it != supervisor[i]->isSupervising.end(); it++) // every supervisor supervises 11 competitors
         {
             if (competitor[*it]->get_alive() == false) // competitor that was supervised by supervisor[i] was eliminated
             {
                 sum_of_debts += competitor[*it]->getDebt(); // supervisor[i] receives his debt
-                total_debt += competitor[*it]->getDebt();   // in the same iteration calculate the total debts for the winner
+                total_debt += competitor[*it]->getDebt();   // in the same iteration calculate the total debt for the winner
             }
             else // it s the winner
             {
                 index_of_supervisor_of_winner = i;                           // save his index of supervisor of the winner
                 index_of_winner = *it;                                       // save index of winner
-                sum_of_debts += competitor[index_of_winner]->getDebt() * 10; // supervisor receives winner's debt*10;
+                sum_of_debts += competitor[index_of_winner]->getDebt() * 10; // supervisor receives winner's debt * 10;
             }
         }
         // now debt is used to store the amount of money every player has won
@@ -1085,12 +1098,15 @@ int main()
 
     // sort and print all supervisor
     SORT_SUPERVISORS(supervisor);
+
     for (int i = 0; i < 9; i++)
     {
         std::cout << "[Supervisor]: " << supervisor[i]->getFirstName() << " " << supervisor[i]->getLastName() << " [" << supervisor[i]->getMask_shape() << " mask], from: " << supervisor[i]->getCity() << ", won: " << supervisor[i]->getDebt() << std::endl;
     }
+
     std::cout << std::endl;
-    // print the team of supervisors with the most money
+    
+    // print the team/teams of supervisors with the most money
     if (circle.getSum() >= triangle.getSum() && circle.getSum() >= rectangle.getSum())
     {
         circle.print();
