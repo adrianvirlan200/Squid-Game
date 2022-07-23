@@ -1,0 +1,7 @@
+make --dry-run --keep-going --print-directory
+make: Entering directory '/home/adi/Squid_Game_POO/POOProject'
+g++ -I. -o out main.cpp Implementation\ files/Players.cpp
+./out
+rm -f out
+make: Leaving directory '/home/adi/Squid_Game_POO/POOProject'
+ 

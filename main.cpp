@@ -1,9 +1,8 @@
-#include <iostream>
-//#include <stdlib.h>
-#include <time.h>
-//#include <math.h>
-//#include <iomanip> // std::setw
-#include <vector>
+#include "Header files/Players.h"
+#include "Header files/Competitors.h"
+
+
+
 // template function that generate random numbers between 2 values
 template <class T>
 T generate_random(int min, int max)
@@ -12,100 +11,9 @@ T generate_random(int min, int max)
     return (std::rand() * std::rand()) % (max - min + 1) + min;
 }
 
-// class for players
-class Players
-{
-protected:
-    std::string first_name;
-    std::string last_name;
-    std::string city;
-    int debt;   // random between 10000 and 100000
-    int weight; // random between 50 and 100
-    bool is_alive;
-
-public:
-    Players(std::string first_name, std::string last_name, std::string city, int debt, int weight) // constructor
-    {
-        this->first_name = first_name;
-        this->last_name = last_name;
-        this->city = city;
-        this->debt = debt;
-        this->weight = weight;
-        this->is_alive = true;
-    }
-    ~Players() {}                      // destructor
-    Players();                         // defauld constructor
-    virtual void print_all_data() = 0; // pure virtual function
-
-    std::string getFirstName(); // getters
-    std::string getLastName();
-    std::string getCity();
-    int getDebt();
-    int getWeight();
-    void setDebt(int); // setter for debt
-};
-std::string Players::getFirstName()
-{
-    return this->first_name;
-}
-std::string Players::getLastName()
-{
-    return this->last_name;
-}
-std::string Players::getCity()
-{
-    return this->city;
-}
-int Players::getWeight()
-{
-    return this->weight;
-}
-void Players::setDebt(int val)
-{
-    this->debt = val;
-}
-
-int Players::getDebt()
-{
-    return this->debt;
-}
-
 // class for competitors
-class Competitors : public Players
-{
-private:
-    int index = 0;                          // real index of competitor(1...99)
-    static int number_of_competitors_alive; // static variable that stores the number of competitors(number of objects created in the begining)
-                                            // 0...98
-    std::string isSupervisedBy;             // stores the mask shape of supervisor mask shape allocated for current
 
-public:
-    Competitors(std::string first_name, std::string last_name, std::string city, int debt, int weight) : Players(first_name, last_name, city, debt, weight) // constructor
-    {
-        if (number_of_competitors_alive > 99) // more then 99 competitors
-        {
-            throw "Error: Too many competitors;\n"; // throw error
-        }
-        else // else increase the number of competitors by 1 and assign index to current competitor
-        {
-            number_of_competitors_alive++;
-            this->index = number_of_competitors_alive;
-        }
-    }
-    ~Competitors() {} // destructor
 
-    void operator--();                           // overloading operator; kills player
-    int getIndex_of_competitor();                // getter; returns the index of competitor
-    static int getNumber_of_competitors_alive(); // getter that returns the number of competitors left alive
-    void print_all_data();                       // overriding method to print all data for current competitor
-    void setSupervisor(std::string);             // setter sets the supervisor for competitor
-    void print_competitor_data_if_alive();       // method to print data if competitor is alive(is_alive == true)
-    bool get_alive();                            // getter (returns is_alive)
-    std::string get_his_supervisor();            // getter(returns the supervisor mask shape)
-
-    friend void PRINT_ALL_COMPETITORS(Competitors); // friend functions
-    friend void PRINT_ALL_COMPETITORS_ALIVE(Competitors);
-};
 
 int Competitors::number_of_competitors_alive = 0;
 
