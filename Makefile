@@ -1,10 +1,12 @@
 all: build run clean
 	
-build: main.cpp Implementation\ files/Players.cpp 
-	g++ -I. -o out main.cpp Implementation\ files/Players.cpp
+build: main.cpp Implementation\ files/*.cpp
+	g++ -I. -o out main.cpp Implementation\ files/*.cpp
 
 run: 
 	./out
 
-clean:
+clean: 
 	rm -f out
+
+.PHONY: all build run clean

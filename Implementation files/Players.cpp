@@ -1,6 +1,6 @@
 //implementation file for Players class
 
-#include "Header files/Players.h"
+#include "../Header files/Players.h"
 
 
 std::string Players::getFirstName()

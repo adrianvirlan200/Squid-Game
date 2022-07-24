@@ -1,102 +1,10 @@
 #include "Header files/Players.h"
 #include "Header files/Competitors.h"
+#include "Header files/other.h"
+#include "Implementation files/template function.h"
 
 
 
-// template function that generate random numbers between 2 values
-template <class T>
-T generate_random(int min, int max)
-{
-    // rand() is generating random numbers smaller than RAND_MAX(~32767),
-    return (std::rand() * std::rand()) % (max - min + 1) + min;
-}
-
-// class for competitors
-
-
-
-int Competitors::number_of_competitors_alive = 0;
-
-bool Competitors::get_alive()
-{
-    return this->is_alive;
-}
-
-std::string Competitors::get_his_supervisor()
-{
-    return this->isSupervisedBy;
-}
-
-void Competitors::operator--() // overloading -- operator; eliminate current competitor
-{
-    // check if there are competitors alive left and if current competitor is alive
-    if (number_of_competitors_alive < 1) // min 1 player
-    {
-        throw "Error: 0 competitors alive;\n"; // throw exception
-    }
-    else if (this->is_alive == false)
-    {
-        throw "Error: Competitor already eliminated;\n"; // throw exception
-    }
-    else
-    {
-        this->is_alive = false;        // eliminate competitor
-        number_of_competitors_alive--; // reduce by 1 the total number of competitors alive
-    }
-}
-
-void Competitors::setSupervisor(std::string mask_type)
-{
-    this->isSupervisedBy = mask_type;
-}
-
-int Competitors::getIndex_of_competitor()
-{
-    return this->index;
-}
-
-int Competitors::getNumber_of_competitors_alive()
-{
-    return number_of_competitors_alive;
-}
-
-// aux method to print all data on coloms (the space between coloms is the same, although the names have diffrent sizes)
-void space(std::string &string, int n)
-{
-    int initial_length = string.length(); // save the initial length of the string, because we will modify the length every iteration
-    for (int i = initial_length; i < n * 15; i++)
-    {
-        string.append(" ");
-    }
-}
-// print all data on coloms
-void Competitors::print_all_data()
-{
-    std::string print;
-    int i = 1;
-
-    print.append(this->first_name);
-    space(print, i++);
-    print.append(this->last_name);
-    space(print, i++);
-    print.append(std::to_string(this->index));
-    space(print, i++);
-    print.append(this->city);
-    space(print, i++);
-    print.append(std::to_string(this->debt));
-    space(print, i++);
-    print.append(std::to_string(this->weight));
-
-    std::cout << print << std::endl;
-}
-
-void Competitors::print_competitor_data_if_alive()
-{
-    if (this->is_alive == true)
-    {
-        this->print_all_data();
-    }
-}
 
 // class for supervisor
 class Supervisors : public Players
@@ -151,7 +59,7 @@ public:
     }
 
     ~Supervisors() {}
-    Supervisors();                                 // defaut constructor
+    Supervisors();                                 // default constructor
     Supervisors(const Supervisors &old_supervisor) // copy constructor
     {
         this->first_name = old_supervisor.first_name;
@@ -502,7 +410,7 @@ int main()
     int current_number_of_supervisors = 0; // max 8
     int current_number_of_competitors = 0; // max 98
 
-    srand(time(NULL)); // generate the seed for rand() (used to generete random numbers)
+    srand(time(NULL)); // generate the seed for rand() (used to generate random numbers)
 
     int assigned = 0;
     for (int i = 0; i < 108; i++) // dynamically allocating memory for every player;
@@ -815,7 +723,7 @@ int main()
     int breakk2 = 0;
 
     std::cout << "\nMARBLES BEGINS!\n\n";
-    // k starts from the begining(from 0) and p starts from the end( from 98)
+    // k starts from the beginning(from 0) and p starts from the end( from 98)
 
     // search for pairs until k < p
     while (k < p)
@@ -1001,7 +909,7 @@ int main()
     std::cout << competitor[index_of_winner]->getFirstName() << " " << competitor[index_of_winner]->getLastName() << ", from " << competitor[index_of_winner]->getCity() << std::endl;
     std::cout << "Winner won: " << competitor[index_of_winner]->getDebt() << std::endl;
 
-    // print all supervisors descendig by the money they won
+    // print all supervisors descending by the money they won
     std::cout << "=======================================================================================\n";
 
     // sort and print all supervisor
@@ -1039,5 +947,5 @@ int main()
         }
     }
 
-    return 1;
+    return 0;
 }

@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Header files/Players.h"
 
 class Competitors : public Players

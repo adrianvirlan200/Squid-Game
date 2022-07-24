@@ -6,7 +6,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sat Jul 23 17:38:08 2022
+# Make data base, printed on Sun Jul 24 15:09:37 2022
 
 # Variables
 
@@ -43,11 +43,11 @@ VTE_VERSION = 6003
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
 # environment
-JOURNAL_STREAM = 8:33108
+JOURNAL_STREAM = 8:30711
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
-# makefile (from 'makefile', line 1)
-MAKEFILE_LIST :=  makefile
+# makefile (from 'Makefile', line 1)
+MAKEFILE_LIST :=  Makefile
 # automatic
 @F = $(notdir $@)
 # environment
@@ -65,7 +65,7 @@ DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
 _ = /usr/bin/code
 # environment
-MANAGERPID = 983
+MANAGERPID = 971
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
@@ -79,7 +79,7 @@ PATH = /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/Adi:@/tmp/.ICE-unix/1258,unix/Adi:/tmp/.ICE-unix/1258
+SESSION_MANAGER = local/Adi:@/tmp/.ICE-unix/1243,unix/Adi:/tmp/.ICE-unix/1243
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -87,7 +87,7 @@ XDG_MENU_PREFIX = gnome-
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = 9795f5dfb49a447d9ca77c281dd303fc
+INVOCATION_ID = b326a47f8843416592a3c786c966eecf
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -105,7 +105,7 @@ PWD = /home/adi/Squid_Game_POO/POOProject
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 1220
+SSH_AGENT_PID = 1206
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -201,7 +201,7 @@ LC_ALL = C
 # environment
 GJS_DEBUG_TOPICS = JS ERROR;JS LOG
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/9785356b_9b54_43e6_bb56_01ff36329dd4
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/5f1d5679_3181_419f_a3db_550ba18a2ccc
 # automatic
 ^F = $(notdir $^)
 # environment
@@ -225,7 +225,7 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 6404
+VSCODE_PID = 5396
 # variable set hash-table stats:
 # Load=108/1024=11%, Rehash=0, Collisions=18/136=13%
 
@@ -235,9 +235,10 @@ VSCODE_PID = 6404
 
 # Directories
 
-# . (device 2053, inode 1184478): 14 files, no impossibilities.
+# . (device 2053, inode 1184478): 13 files, no impossibilities.
+# Implementation files (device 2053, inode 1184737): 6 files, no impossibilities.
 
-# 14 files, no impossibilities in 1 directories.
+# 19 files, no impossibilities in 2 directories.
 
 # Implicit Rules
 
@@ -246,6 +247,7 @@ VSCODE_PID = 6404
 # Files
 
 all: build run clean
+#  Phony target (prerequisite of .PHONY).
 #  Command line target.
 #  Implicit rule search has not been done.
 #  File does not exist.
@@ -253,15 +255,20 @@ all: build run clean
 #  Needs to be updated (-q is set).
 # variable set hash-table stats:
 # Load=0/32=0%, Rehash=0, Collisions=0/3=0%
-#  recipe to execute (from 'makefile', line 2):
+#  recipe to execute (from 'Makefile', line 2):
 	
 
 # Not a target:
 Implementation files/Players.cpp:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-23 17:17:32.84486589
+#  Last modified 2022-07-24 13:23:36.504617778
 #  File has been updated.
 #  Successfully updated.
+
+.PHONY: all build run clean
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 # Not a target:
 .SUFFIXES:
@@ -270,19 +277,20 @@ Implementation files/Players.cpp:
 #  File has not been updated.
 
 # Not a target:
-makefile:
+Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-23 17:37:17.330634891
+ 
+#  Last modified 2022-07-24 15:05:46.547004528
 #  File has been updated.
 #  Successfully updated.
 
-build: main.cpp Implementation files/Players.cpp
+build: main.cpp Implementation files/Players.cpp Implementation files/Competitors.cpp Implementation files/other.cpp
+#  Phony target (prerequisite of .PHONY).
 #  Implicit rule search has not been done.
 #  Implicit/static pattern stem: ''
 #  File does not exist.
 #  File has been updated.
 #  Needs to be updated (-q is set).
- 
 # automatic
 # @ := build
 # automatic
@@ -290,24 +298,24 @@ build: main.cpp Implementation files/Players.cpp
 # automatic
 # * := 
 # automatic
-# + := main.cpp Implementation files/Players.cpp
+# + := main.cpp Implementation files/Players.cpp Implementation files/Competitors.cpp Implementation files/other.cpp
 # automatic
 # | := 
 # automatic
 # < := main.cpp
 # automatic
-# ^ := main.cpp Implementation files/Players.cpp
+# ^ := main.cpp Implementation files/Players.cpp Implementation files/Competitors.cpp Implementation files/other.cpp
 # automatic
-# ? := main.cpp Implementation files/Players.cpp
+# ? := main.cpp Implementation files/Players.cpp Implementation files/Competitors.cpp Implementation files/other.cpp
 # variable set hash-table stats:
 # Load=8/32=25%, Rehash=0, Collisions=1/11=9%
-#  recipe to execute (from 'makefile', line 4):
-	g++ -I. -o out main.cpp Implementation\ files/Players.cpp
+#  recipe to execute (from 'Makefile', line 4):
+	g++ -I. -o out main.cpp Implementation\ files/*.cpp
 
 # Not a target:
 main.cpp:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-23 17:20:41.479894104
+#  Last modified 2022-07-24 14:15:28.413866784
 #  File has been updated.
 #  Successfully updated.
 
@@ -318,33 +326,49 @@ main.cpp:
 #  File has not been updated.
 
 run:
+#  Phony target (prerequisite of .PHONY).
 #  Implicit rule search has not been done.
-#  Modification time never checked.
+#  File does not exist.
 #  File has not been updated.
-#  recipe to execute (from 'makefile', line 7):
+#  recipe to execute (from 'Makefile', line 7):
 	./out
 
+# Not a target:
+Implementation files/other.cpp:
+#  Implicit rule search has been done.
+#  Last modified 2022-07-24 14:13:37.493575731
+#  File has been updated.
+#  Successfully updated.
+
 clean:
+#  Phony target (prerequisite of .PHONY).
 #  Implicit rule search has not been done.
-#  Modification time never checked.
+#  File does not exist.
 #  File has not been updated.
-#  recipe to execute (from 'makefile', line 10):
+#  recipe to execute (from 'Makefile', line 10):
 	rm -f out
 
+# Not a target:
+Implementation files/Competitors.cpp:
+#  Implicit rule search has been done.
+#  Last modified 2022-07-24 13:55:29.288312608
+#  File has been updated.
+#  Successfully updated.
+
 # files hash-table stats:
-# Load=9/1024=1%, Rehash=0, Collisions=0/29=0%
+# Load=12/1024=1%, Rehash=0, Collisions=0/38=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 23 / storage = 249 B / avg = 10 B
-# current buf: size = 8162 B / used = 249 B / count = 23 / avg = 10 B
+# strcache buffers: 1 (0) / strings = 29 / storage = 366 B / avg = 12 B
+# current buf: size = 8162 B / used = 366 B / count = 29 / avg = 12 B
 
-# strcache performance: lookups = 37 / hit rate = 37%
+# strcache performance: lookups = 51 / hit rate = 43%
 # hash-table stats:
-# Load=23/8192=0%, Rehash=0, Collisions=1/37=3%
-# Finished Make data base on Sat Jul 23 17:38:08 2022
+# Load=29/8192=0%, Rehash=0, Collisions=2/51=4%
+# Finished Make data base on Sun Jul 24 15:09:37 2022
 
  
