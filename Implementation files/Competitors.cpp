@@ -1,5 +1,5 @@
 #include "../Header files/Competitors.h"
-#include "../Header files/other.h"
+#include "../Header files/functions.h"
 
 int Competitors::number_of_competitors_alive = 0;
 
@@ -45,6 +45,7 @@ int Competitors::getNumber_of_competitors_alive()
 {
     return number_of_competitors_alive;
 }
+
 
 // print all data on columns
 void Competitors::print_all_data()

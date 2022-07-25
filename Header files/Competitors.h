@@ -1,6 +1,6 @@
 #pragma once
-
-#include "Header files/Players.h"
+#include <iostream>
+#include "Players.h"
 
 class Competitors : public Players
 {
@@ -33,6 +33,6 @@ public:
     bool get_alive();                            // getter (returns is_alive)
     std::string get_his_supervisor();            // getter(returns the supervisor mask shape)
 
-    friend void PRINT_ALL_COMPETITORS(Competitors); // friend functions
-    friend void PRINT_ALL_COMPETITORS_ALIVE(Competitors);
+    friend void PRINT_ALL_COMPETITORS(Competitors *competitor[]); // friend functions
+    friend void PRINT_ALL_COMPETITORS_ALIVE(Competitors *competitor[]);
 };

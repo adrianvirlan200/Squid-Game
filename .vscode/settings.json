@@ -45,7 +45,9 @@
         "cstring": "cpp",
         "ctime": "cpp",
         "ratio": "cpp",
-        "iomanip": "cpp"
+        "iomanip": "cpp",
+        "optional": "cpp",
+        "string_view": "cpp"
     },
     "cSpell.ignoreWords": [
         "breakk",
