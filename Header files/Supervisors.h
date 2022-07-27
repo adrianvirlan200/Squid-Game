@@ -79,6 +79,6 @@ public:
     static int get_num_of_supervisors_with_rectangle_mask(); // static getters
     void print_all_data();                                   // overriding
 
-   friend void PRINT_ALL_SUPERVISORS(Supervisors);
-   friend void SORT_SUPERVISORS(Supervisors);
+   friend void PRINT_ALL_SUPERVISORS(Supervisors **);
+   friend void SORT_SUPERVISORS(Supervisors **);
 };

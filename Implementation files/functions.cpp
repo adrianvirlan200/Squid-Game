@@ -1,5 +1,141 @@
 #include <iostream>
 #include "Header files/functions.h"
+#include "template function.h"
+
+void ASSIGN_PLAYERS(Supervisors *supervisor[], Competitors *competitor[])
+{
+    // srand(time(NULL));
+
+    int current_number_of_supervisors = 0; // max 8 (9 supervisors)
+    int current_number_of_competitors = 0; // max 98 (99 competitors)
+
+    for (int i = 0; i < 108; i++) // dynamically allocate memory for every player;
+    {
+
+        // generate the names randomly
+        std::string first_name, last_name, city;
+        int max_Fname, max_Lname, max_city;
+
+        // generate the length of names randomly
+        max_Fname = generate_random<int>(3, 10);
+        max_Lname = generate_random<int>(3, 10);
+        max_city = generate_random<int>(3, 10);
+
+        // generate the first letter of the name randomly
+        first_name.push_back(generate_random<char>(65, 90)); // first letter is capital letter
+        last_name.push_back(generate_random<char>(65, 90));  // first letter is capital letter
+        city.push_back(generate_random<char>(65, 90));       // first letter is capital letter
+
+        // generate the rest of the letters randomly
+        for (int i = 1; i < max_Fname; i++)
+        {
+            first_name.push_back(generate_random<char>(97, 122));
+        }
+
+        for (int i = 1; i < max_Lname; i++)
+        {
+            last_name.push_back(generate_random<char>(97, 122));
+        }
+        for (int i = 1; i < max_city; i++)
+        {
+            city.push_back(generate_random<char>(97, 122));
+        }
+
+        /* If the number between 0-25 generated randomly is divided by 5 => that player is a supervisor, otherwise it is a competitor
+        repeat the process for every player until all slots are taken
+         If one class of supervisors is full, then search for another free slot in others classes
+         if no slot is available, then that player is a competitor
+         If no slots for competitor is available, then that player is a supervisor
+         */
+
+        bool assigned = false; // true if current player was assigned, false otherwise
+        // generate random number;
+        if (generate_random<int>(0, 25) % 5 == 0) // if true = it's a supervisor
+        {
+            if (current_number_of_supervisors < 9) // there are free supervisor slots
+            {
+                switch (generate_random<int>(1, 3) % 3) // random number between 1 and 3 to chose the type of mask
+                {
+                case 0:                                                             // circle mask
+                    if (Supervisors::get_num_of_supervisors_with_circle_mask() < 3) // there are les than 3 circle mask supervisors
+                    {
+                        assigned = true; // the current player was assigned
+                        supervisor[current_number_of_supervisors++] = new Supervisors(first_name, last_name, city, generate_random<int>(10000, 100000), generate_random<int>(50, 100), "circle");
+                    }
+                    break;
+                case 1:                                                                // rectangle mask
+                    if (Supervisors::get_num_of_supervisors_with_rectangle_mask() < 3) // there are less than 3 rectangle mask supervisors
+                    {
+                        assigned = true; // the current player was assigned
+                        supervisor[current_number_of_supervisors++] = new Supervisors(first_name, last_name, city, generate_random<int>(10000, 100000), generate_random<int>(50, 100), "rectangle");
+                    }
+                    break;
+                case 2: // triangle
+                    if (Supervisors::get_num_of_supervisors_with_triangle_mask() < 3)
+                    {
+                        assigned = true; // the current player was assigned
+                        supervisor[current_number_of_supervisors++] = new Supervisors(first_name, last_name, city, generate_random<int>(10000, 100000), generate_random<int>(50, 100), "triangle");
+                    }
+                    break;
+                }
+                if (assigned == false) // if current player could be not assigned, search for and empty place in the team of supervisors
+                {
+                    if (Supervisors::get_num_of_supervisors_with_circle_mask() < 3) // add circle mask if free
+                    {
+                        assigned = true; // the current player was assigned
+                        supervisor[current_number_of_supervisors++] = new Supervisors(first_name, last_name, city, generate_random<int>(10000, 100000), generate_random<int>(50, 100), "circle");
+                    }
+                    else if (Supervisors::get_num_of_supervisors_with_rectangle_mask() < 3) // add rectangle mask if free
+                    {
+                        assigned = true; // the current player was assigned
+                        supervisor[current_number_of_supervisors++] = new Supervisors(first_name, last_name, city, generate_random<int>(10000, 100000), generate_random<int>(50, 100), "rectangle");
+                    }
+                    else if (Supervisors::get_num_of_supervisors_with_triangle_mask() < 3) // add triangle mask if free
+                    {
+                        assigned = true; // the current player was assigned
+                        supervisor[current_number_of_supervisors++] = new Supervisors(first_name, last_name, city, generate_random<int>(10000, 100000), generate_random<int>(50, 100), "triangle");
+                    }
+                }
+                else // (assigned == true) a player was assigned as a supervisor successfully
+                {
+                    assigned = 0;
+                }
+            }
+            else // else all slots for supervisors are occupied, add current user as a competitor
+            {
+                if (current_number_of_competitors < 99)
+                {
+                    competitor[current_number_of_competitors++] = new Competitors(first_name, last_name, city, generate_random<int>(10000, 100000), generate_random<int>(50, 100));
+                }
+            }
+        }
+        else // it's a competitor
+        {
+            if (current_number_of_competitors < 99) // if there are free slots for competitors, add current user as a competitor
+            {
+                competitor[current_number_of_competitors++] = new Competitors(first_name, last_name, city, generate_random<int>(10000, 100000), generate_random<int>(50, 100));
+            }
+            // if there are not free slots available for competitors, add current player as a supervisor(repeat the process of adding a supervisor)
+            else if (Supervisors::get_num_of_supervisors_with_circle_mask() < 3)
+            {
+                supervisor[current_number_of_supervisors++] = new Supervisors(first_name, last_name, city, generate_random<int>(10000, 100000), generate_random<int>(50, 100), "circle");
+            }
+            else if (Supervisors::get_num_of_supervisors_with_rectangle_mask() < 3)
+            {
+                supervisor[current_number_of_supervisors++] = new Supervisors(first_name, last_name, city, generate_random<int>(10000, 100000), generate_random<int>(50, 100), "rectangle");
+            }
+            else if (Supervisors::get_num_of_supervisors_with_triangle_mask() < 3)
+            {
+                supervisor[current_number_of_supervisors++] = new Supervisors(first_name, last_name, city, generate_random<int>(10000, 100000), generate_random<int>(50, 100), "triangle");
+            }
+        }
+
+        // reset the strings for the next competitors
+        first_name.clear();
+        last_name.clear();
+        city.clear();
+    }
+}
 
 // aux method to print all data on columns (the space between columns is the same, although the names have different sizes)
 void space(std::string &string, int n)
@@ -43,18 +179,6 @@ void SORT_SUPERVISORS(Supervisors *supervisor[])
     }
 }
 
-// function used to print all competitors
-void PRINT_ALL_COMPETITORS(Competitors *competitor[])
-{
-    std::cout << "\nAll competitors:\n";
-    std::cout << "First Name     Last Name      Index          City           Debt           Weight" << std::endl;
-    std::cout << "---------------------------------------------------------------------------------\n";
-
-    for (int i = 0; i < 99; i++)
-    {
-        competitor[i]->print_all_data();
-    }
-}
 // function used to print all competitors that are not eliminated
 void PRINT_ALL_COMPETITORS_ALIVE(Competitors *competitor[])
 {

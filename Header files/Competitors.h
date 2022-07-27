@@ -12,7 +12,7 @@ private:
 public:
     Competitors(std::string first_name, std::string last_name, std::string city, int debt, int weight) : Players(first_name, last_name, city, debt, weight) // constructor
     {
-        if (number_of_competitors_alive > 99) // more then 99 competitors
+        if (this->number_of_competitors_alive > 99) // more then 99 competitors
         {
             throw "Error: Too many competitors;\n"; // throw error
         }
@@ -33,6 +33,5 @@ public:
     bool get_alive();                            // getter (returns is_alive)
     std::string get_his_supervisor();            // getter(returns the supervisor mask shape)
 
-    friend void PRINT_ALL_COMPETITORS(Competitors *competitor[]); // friend functions
     friend void PRINT_ALL_COMPETITORS_ALIVE(Competitors *competitor[]);
 };
