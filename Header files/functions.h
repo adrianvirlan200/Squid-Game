@@ -9,7 +9,10 @@ void ASSIGN_PLAYERS(Supervisors *supervisor[], Competitors *competitor[]);
 void space(std::string& string , int n);
 
 void PRINT_ALL_SUPERVISORS(Supervisors *supervisor[]);
-void SORT_SUPERVISORS(Supervisors *supervisor[]);
+
+void MERGE_SORT(Supervisors *supervisor[],int const left, int const right);
+void MERGE(Supervisors *supervisor[], int const left, int const mid, int const right);
+
 void PRINT_ALL_COMPETITORS_ALIVE(Competitors *competitor[]);
 
 void RED_LIGHT_GREEN_LIGHT(Competitors *competitor[]);

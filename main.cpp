@@ -405,7 +405,7 @@ int main()
     std::cout << "=======================================================================================\n";
 
     // sort and print all supervisor
-    SORT_SUPERVISORS(supervisor);
+    MERGE_SORT(supervisor,0 , Supervisors::getNumber_of_supervisors() - 1);
 
     for (int i = 0; i < 9; i++)
     {

@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Header files/functions.h"
+#include "../Header files/functions.h"
 #include "template function.h"
 
 void ASSIGN_PLAYERS(Supervisors *supervisor[], Competitors *competitor[])
@@ -161,22 +161,75 @@ void PRINT_ALL_SUPERVISORS(Supervisors *supervisor[])
     }
 }
 
-void SORT_SUPERVISORS(Supervisors *supervisor[])
+void MERGE(Supervisors *supervisor[], int const left, int const mid, int const right)
 {
-    Supervisors *aux_supervisor;
+    // calculate the dimensions of the sub arrays
+    int left_subArray_length = mid - left + 1; //[left ... mid]
+    int right_subArray_length = right - mid;   //[mid + 1 ... end]
 
-    for (int i = 0; i < 9; i++)
+    // create the temporary arrays
+    Supervisors **leftArray = new Supervisors *[left_subArray_length];
+    Supervisors **rightArray = new Supervisors *[right_subArray_length];
+
+    // copy the data from the original array to the temporary arrays
+    for (int i = 0; i < left_subArray_length; i++)
     {
-        for (int j = 0; j < 9; j++)
+        leftArray[i] = supervisor[i + left];
+    }
+
+    for (int i = 0; i < right_subArray_length; i++)
+    {
+        rightArray[i] = supervisor[i + mid + 1];
+    }
+
+    
+    int rightArray_index = 0;
+    int leftArray_index = 0;
+    int mergedArray_index = left;
+
+    // reassemble the array descending by the amount of money won(that is store as debt)
+    while (leftArray_index < left_subArray_length && rightArray_index < right_subArray_length)
+    {
+        if (leftArray[leftArray_index]->getDebt() >= rightArray[rightArray_index]->getDebt())
         {
-            if (supervisor[i]->getDebt() > supervisor[j]->getDebt())
-            {
-                aux_supervisor = supervisor[i];
-                supervisor[i] = supervisor[j];
-                supervisor[j] = aux_supervisor;
-            }
+            supervisor[mergedArray_index++] = leftArray[leftArray_index++];
+        }
+        else
+        {
+            supervisor[mergedArray_index++] = rightArray[rightArray_index++];
         }
     }
+
+    // add the remaining elements if there are any
+    while (leftArray_index < left_subArray_length)
+    {
+        supervisor[mergedArray_index++] = leftArray[leftArray_index++];
+    }
+    while (rightArray_index < right_subArray_length)
+    {
+        supervisor[mergedArray_index++] = rightArray[rightArray_index++];
+    }
+
+    // free the memory
+    delete[] leftArray;
+    delete[] rightArray;
+}
+
+void MERGE_SORT(Supervisors *supervisor[], int const left, int const right)
+{
+    if (left >= right)
+    {
+        return;
+    }
+
+    // calculate the middle index of the array
+    int mid = left + (right - left) / 2;
+
+    // break the array recursively in half
+    MERGE_SORT(supervisor, left, mid);
+    MERGE_SORT(supervisor, mid + 1, right);
+    //merge the sub arrays together
+    MERGE(supervisor, left, mid, right);
 }
 
 // function used to print all competitors that are not eliminated
