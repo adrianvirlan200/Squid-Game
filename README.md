@@ -1,4 +1,8 @@
 # POOProject
+The year 2021 was full of surprises, one of them represented by the South Korean series "Squid Game". Your goal is to recreate your game logic from the series using OOP concepts.
+
+The requirements you received from the game creator are as follows:
+
 The application must store the data of the people who will participate in the games. The required data are as follows: name, first name, town, debt money (randomly allocated between 10,000 and 100,000), weight (randomly assigned between 50 and 100)
 
 There will be a total of 108 users in the application
@@ -12,19 +16,19 @@ Competitors will be divided equally between the 3 groups of supervisors so that 
 
 Once divided, users will start the games.
 
-    The first game is "Red Light Green Light"
+#The first game is "Red Light Green Light"
 
 In the first game, all users with an even number will be eliminated. Show who's left
 
-    The second game is "Tug of War"
+#The second game is "Tug of War"
 
 Players will be randomly divided into 4 equal teams. If there are players who do not join a team, they go straight to the next stage. Two by two, the teams will duel, being eliminated the one with the lowest weight. When a team is eliminated, all its players are eliminated .Show who's left
     
-    The third game is "Marbles"
+#The third game is "Marbles"
 
 The remaining players will be divided into pairs of two, each of which will generate a random number, and the one with the smaller number will move on. If the number of players reached in this stage is odd, the one left out automatically goes to the next stage. Show who's left
 
-    The last stage, the fourth game, is "Genken", or "Stone, Paper, Scissors"
+#The last stage, the fourth game, is "Genken", or "Stone, Paper, Scissors"
 
 Starting in descending order of competition numbers, players will duel (1vs1) one at a time at Genken. Each move has an associated number, stone = 1, paper = 2, scissors = 3. The number chosen by each player is random. It is played until one player is eliminated and the next one is left until there is only one winner left. Show who's left
 
