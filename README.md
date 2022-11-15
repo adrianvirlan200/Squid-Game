@@ -3,14 +3,14 @@ The year 2021 was full of surprises, one of them represented by the South Korean
 
 The requirements you received from the game creator are as follows:
 
-The application must store the data of the people who will participate in the games. The required data are as follows: name, first name, town, debt money (randomly allocated between 10,000 and 100,000), weight (randomly assigned between 50 and 100)
+    The application must store the data of the people who will participate in the games. The required data are as follows: name, first name, town, debt money (randomly allocated between 10,000 and 100,000), weight (randomly assigned between 50 and 100)
 
-There will be a total of 108 users in the application
-Users will be of two types, each with other specific details: competitor: contest number and supervisor: mask shape(rectangle, triangle, circle)
+    There will be a total of 108 users in the application
+    Users will be of two types, each with other specific details: competitor: contest number and supervisor: mask shape(rectangle, triangle, circle)
 The 108 users will be randomly divided into two classes as follows:
 
-99 competitors. Competitors will receive an increasing number between 1 and 99
-9 supervisors. Supervisors will be divided into 3 equal random groups for each form
+    99 competitors. Competitors will receive an increasing number between 1 and 99
+    9 supervisors. Supervisors will be divided into 3 equal random groups for each form
 
 Competitors will be divided equally between the 3 groups of supervisors so that each competitor has a supervisor. Each supervisor will have the same number of competitors.
 
