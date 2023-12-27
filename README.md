@@ -1,4 +1,4 @@
-# Squid Game- OOP Project
+# Squid Game - OOP Project
 The year 2021 was full of surprises, one of them represented by the South Korean series "Squid Game". Your goal is to recreate your game logic from the series using OOP concepts.
 
 The requirements you received from the game creator are as follows:
