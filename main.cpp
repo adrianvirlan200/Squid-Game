@@ -6,7 +6,6 @@
 #include "Implementation files/template function.h"
 
 //this file implements the main function, which is first executed when running the code
-
 int main()
 {
     Competitors *competitor[99];
