@@ -1,5 +1,6 @@
 // class for supervisor
 #pragma once
+#include <iostream>
 #include "Players.h"
 
 class Supervisors : public Players
@@ -12,7 +13,9 @@ private:
     static int num_of_supervisors_with_triangle_mask;  // 0,1,2
     static int num_of_supervisors_with_rectangle_mask; // 0,1,2
 public:
-    std::vector<int> isSupervising; // vector that stores the index of every competitor that is supervised by current supervisor
+    // vector type that stores the index of each competitor that is supervised by current supervisor
+    std::vector<int> isSupervising; 
+    
     Supervisors(std::string first_name, std::string last_name, std::string city, int debt, int weight, std::string mask_shape) : Players(first_name, last_name, city, debt, weight)
     {
         total_number_of_supervisors++;

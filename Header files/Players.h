@@ -1,5 +1,3 @@
-// class for players
-
 #pragma once
 
 #include <iostream>

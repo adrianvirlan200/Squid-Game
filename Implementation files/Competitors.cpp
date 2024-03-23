@@ -25,9 +25,16 @@ void Competitors::operator--() // overloading -- operator; eliminate current com
         throw "Error: Competitor already eliminated;\n"; // throw exception
     }
     else
-    {
-        this->is_alive = false;        // eliminate competitor
-        number_of_competitors_alive--; // reduce by 1 the total number of competitors alive
+    {   
+        if(this->get_alive())
+        {
+            this->is_alive = false;        // eliminate competitor
+            number_of_competitors_alive--; // reduce by 1 the total number of competitors alive
+        }
+        else
+        {
+            std::cout<<"Warning: Stop, he is already dead!\n";
+        }
     }
 }
 

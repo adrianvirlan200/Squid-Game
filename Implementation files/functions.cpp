@@ -4,53 +4,56 @@
 
 void ASSIGN_PLAYERS(Supervisors *supervisor[], Competitors *competitor[])
 {
-    // srand(time(NULL));
+    int current_number_of_supervisors = 0;
+    int current_number_of_competitors = 0;
 
-    int current_number_of_supervisors = 0; // max 8 (9 supervisors)
-    int current_number_of_competitors = 0; // max 98 (99 competitors)
-
-    for (int i = 0; i < 108; i++) // dynamically allocate memory for every player;
+    for (int i = 0; i < 108; i++) // dynamically allocate memory for each player;
     {
-
-        // generate the names randomly
+        // generate the names randomly;
+        // we declare 3 string variables to store the name themselves and
+        // 3 additional int variables to generate random lengths of the names
         std::string first_name, last_name, city;
-        int max_Fname, max_Lname, max_city;
+        int max_Fname_length, max_Lname_length, max_city_length;
 
-        // generate the length of names randomly
-        max_Fname = generate_random<int>(3, 10);
-        max_Lname = generate_random<int>(3, 10);
-        max_city = generate_random<int>(3, 10);
+        // pick random lengths of the names(between 3 and 10 characters)
+        max_Fname_length = generate_random<int>(3, 10);
+        max_Lname_length = generate_random<int>(3, 10);
+        max_city_length = generate_random<int>(3, 10);
 
         // generate the first letter of the name randomly
-        first_name.push_back(generate_random<char>(65, 90)); // first letter is capital letter
-        last_name.push_back(generate_random<char>(65, 90));  // first letter is capital letter
-        city.push_back(generate_random<char>(65, 90));       // first letter is capital letter
+        first_name.push_back(generate_random<char>(65, 90)); // first letter is in upper case
+        last_name.push_back(generate_random<char>(65, 90));  // first letter is in upper case
+        city.push_back(generate_random<char>(65, 90));       // first letter is in upper case
 
-        // generate the rest of the letters randomly
-        for (int i = 1; i < max_Fname; i++)
+        // generate the remaining letters of the name(only letters lower case)
+        for (int i = 1; i < max_Fname_length; i++)
         {
             first_name.push_back(generate_random<char>(97, 122));
         }
-
-        for (int i = 1; i < max_Lname; i++)
+        for (int i = 1; i < max_Lname_length; i++)
         {
             last_name.push_back(generate_random<char>(97, 122));
         }
-        for (int i = 1; i < max_city; i++)
+        for (int i = 1; i < max_city_length; i++)
         {
             city.push_back(generate_random<char>(97, 122));
         }
 
-        /* If the number between 0-25 generated randomly is divided by 5 => that player is a supervisor, otherwise it is a competitor
-        repeat the process for every player until all slots are taken
-         If one class of supervisors is full, then search for another free slot in others classes
-         if no slot is available, then that player is a competitor
-         If no slots for competitor is available, then that player is a supervisor
+        /* Now we need to assign a player as a competitor or as a supervisor. The algorithm used is described below.
+        Firstly, we generate a random number, between 0 and 25. If this number can be divided by 5 => the current 
+        player is a supervisor, otherwise it is a competitor.
+        Repeat the process for each player until all slots for a class of supervisors are taken.
+        If one class of supervisors is full, then search for another free slot in others classes.
+        If no other slot is available for supervision, then the current player will be considered a competitor.
+        In the same way, if no slots for competitors is available, then the current player is a supervisor.
          */
 
-        bool assigned = false; // true if current player was assigned, false otherwise
-        // generate random number;
-        if (generate_random<int>(0, 25) % 5 == 0) // if true = it's a supervisor
+        bool assigned = false; // true if the current player was assigned, false otherwise
+        // generate a random number;
+        int dummy_number;
+        dummy_number = generate_random<int>(0, 25);
+
+        if (dummy_number % 5 == 0) // if true => the current player it's a supervisor
         {
             if (current_number_of_supervisors < 9) // there are free supervisor slots
             {
@@ -78,26 +81,27 @@ void ASSIGN_PLAYERS(Supervisors *supervisor[], Competitors *competitor[])
                     }
                     break;
                 }
-                if (assigned == false) // if current player could be not assigned, search for and empty place in the team of supervisors
+                if (assigned == false) // if current player could not be assigned, search for and empty place in the team of supervisors
                 {
-                    if (Supervisors::get_num_of_supervisors_with_circle_mask() < 3) // add circle mask if free
+                    if (Supervisors::get_num_of_supervisors_with_circle_mask() < 3) // add circle mask if available
                     {
                         assigned = true; // the current player was assigned
                         supervisor[current_number_of_supervisors++] = new Supervisors(first_name, last_name, city, generate_random<int>(10000, 100000), generate_random<int>(50, 100), "circle");
                     }
-                    else if (Supervisors::get_num_of_supervisors_with_rectangle_mask() < 3) // add rectangle mask if free
+                    else if (Supervisors::get_num_of_supervisors_with_rectangle_mask() < 3) // add rectangle mask if available
                     {
                         assigned = true; // the current player was assigned
                         supervisor[current_number_of_supervisors++] = new Supervisors(first_name, last_name, city, generate_random<int>(10000, 100000), generate_random<int>(50, 100), "rectangle");
                     }
-                    else if (Supervisors::get_num_of_supervisors_with_triangle_mask() < 3) // add triangle mask if free
+                    else if (Supervisors::get_num_of_supervisors_with_triangle_mask() < 3) // add triangle mask if available
                     {
                         assigned = true; // the current player was assigned
                         supervisor[current_number_of_supervisors++] = new Supervisors(first_name, last_name, city, generate_random<int>(10000, 100000), generate_random<int>(50, 100), "triangle");
                     }
                 }
-                else // (assigned == true) a player was assigned as a supervisor successfully
-                {
+                else // (assigned == true) a player has been assigned as a supervisor successfully
+                {   
+                    //reset the flag for the next player
                     assigned = 0;
                 }
             }
@@ -137,7 +141,10 @@ void ASSIGN_PLAYERS(Supervisors *supervisor[], Competitors *competitor[])
     }
 }
 
-// aux method to print all data on columns (the space between columns is the same, although the names have different sizes)
+/* This function is an auxiliary function used to display the supervisors and the competitors
+on columns in an arranged way. Basically, it help us to generate a variable number of blank spaces
+dependant of the lengths of the words. In this way, every column will be indented nicely.
+*/
 void space(std::string &string, int n)
 {
     int initial_length = string.length(); // save the initial length of the string, because we will modify the length every iteration
@@ -147,7 +154,6 @@ void space(std::string &string, int n)
     }
 }
 
-// FUNCTIONS
 // function used to print all supervisors
 void PRINT_ALL_SUPERVISORS(Supervisors *supervisor[])
 {
@@ -155,12 +161,13 @@ void PRINT_ALL_SUPERVISORS(Supervisors *supervisor[])
     std::cout << "First Name     Last Name      Mask Shape     City           Debt           Weight" << std::endl;
     std::cout << "---------------------------------------------------------------------------------\n";
 
-    for (int i = 0; i < 9; i++)
+    for (int supervisor_cnt = 0; supervisor_cnt < Supervisors::getNumber_of_supervisors(); supervisor_cnt++)
     {
-        supervisor[i]->print_all_data();
+        supervisor[supervisor_cnt]->print_all_data();
     }
 }
 
+// auxiliary function used in the implementation of the merge sort algorithm
 void MERGE(Supervisors *supervisor[], int const left, int const mid, int const right)
 {
     // calculate the dimensions of the sub arrays
@@ -171,18 +178,16 @@ void MERGE(Supervisors *supervisor[], int const left, int const mid, int const r
     Supervisors **leftArray = new Supervisors *[left_subArray_length];
     Supervisors **rightArray = new Supervisors *[right_subArray_length];
 
-    // copy the data from the original array to the temporary arrays
+    // copy the data from the initial array to the temporary arrays
     for (int i = 0; i < left_subArray_length; i++)
     {
         leftArray[i] = supervisor[i + left];
     }
-
     for (int i = 0; i < right_subArray_length; i++)
     {
         rightArray[i] = supervisor[i + mid + 1];
     }
 
-    
     int rightArray_index = 0;
     int leftArray_index = 0;
     int mergedArray_index = left;
@@ -228,11 +233,11 @@ void MERGE_SORT(Supervisors *supervisor[], int const left, int const right)
     // break the array recursively in half
     MERGE_SORT(supervisor, left, mid);
     MERGE_SORT(supervisor, mid + 1, right);
-    //merge the sub arrays together
+    // merge the sub arrays together
     MERGE(supervisor, left, mid, right);
 }
 
-// function used to print all competitors that are not eliminated
+// function used to print all competitors that are not yet eliminated
 void PRINT_ALL_COMPETITORS_ALIVE(Competitors *competitor[])
 {
     std::cout << "\nAll competitors Alive:\n";
@@ -274,13 +279,13 @@ void TUG_OF_WAR(Competitors **team[][12])
 {
 
     int sum[4] = {0}; // sum[i] = total weight of team[i]
-    // calculate the total weight for every team
+    // calculate the total weight for each team
     for (int i = 0; i < 12; i++)
     {
-        sum[0] += (*team[0][i])->getWeight();
-        sum[1] += (*team[1][i])->getWeight();
-        sum[2] += (*team[2][i])->getWeight();
-        sum[3] += (*team[3][i])->getWeight();
+        for(int j = 0; j < 4; j++)
+        {
+            sum[j] += (*team[j][i])->getWeight();
+        }
     }
 
     std::cout << "\nTUG OF WAR BEGINS!\n";
@@ -297,7 +302,6 @@ void TUG_OF_WAR(Competitors **team[][12])
 
     int team_already_eliminated[4] = {0}; // use to check if a team is already eliminated
 
-    // 2 for to generate all possible combinations
     for (int i = 0; i < 4; i++)
     {
         for (int j = 0; j < 4; j++)
